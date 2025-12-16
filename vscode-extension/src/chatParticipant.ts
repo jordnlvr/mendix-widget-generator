@@ -119,6 +119,9 @@ export class MendixWidgetChatParticipant {
       case 'learn':
         return await this.handleLearn(request, stream, token);
 
+      case 'help':
+        return await this.showHelp(stream);
+
       default:
         stream.markdown(`Unknown command: ${request.command}`);
         return {};
@@ -581,18 +584,27 @@ export class MendixWidgetChatParticipant {
   }
 
   private async showHelp(stream: vscode.ChatResponseStream): Promise<vscode.ChatResult> {
-    stream.markdown(`# 🎨 Mendix Widget Agent\n\n`);
+    stream.markdown(`# 🎨 Mendix Widget Agent v1.3.2\n\n`);
     stream.markdown(`I help you create Mendix Pluggable Widgets using natural language.\n\n`);
-    stream.markdown(`## Commands\n\n`);
-    stream.markdown(`- \`/create\` - Create a widget from description\n`);
-    stream.markdown(`- \`/template\` - Use a pre-built template\n`);
-    stream.markdown(`- \`/deploy\` - Deploy widget to a Mendix project\n`);
-    stream.markdown(`- \`/fix\` - Analyze and fix build errors\n`);
-    stream.markdown(`- \`/research\` - Beast Mode research on widget topics\n\n`);
-    stream.markdown(`## Quick Start\n\n`);
-    stream.markdown(`Just describe what you want:\n\n`);
+    stream.markdown(`## 📝 Commands\n\n`);
+    stream.markdown(`| Command | Description |\n`);
+    stream.markdown(`|---------|-------------|\n`);
+    stream.markdown(`| \`/create\` | Create a widget from natural language description |\n`);
+    stream.markdown(`| \`/template\` | Browse and use pre-built widget templates |\n`);
+    stream.markdown(`| \`/deploy\` | Deploy a built widget to a Mendix project |\n`);
+    stream.markdown(`| \`/fix\` | Analyze build errors and suggest fixes |\n`);
+    stream.markdown(`| \`/research\` | Beast Mode 7-tier research on any widget topic |\n`);
+    stream.markdown(`| \`/update\` | Check for extension updates |\n`);
+    stream.markdown(`| \`/status\` | View current widget generation status |\n`);
+    stream.markdown(`| \`/patterns\` | View the learned patterns nucleus |\n`);
+    stream.markdown(`| \`/learn\` | Teach a new pattern to the nucleus |\n`);
+    stream.markdown(`| \`/help\` | Show this help message |\n\n`);
+    stream.markdown(`## 🚀 Quick Start\n\n`);
+    stream.markdown(`Just describe what you want - no command needed:\n\n`);
     stream.markdown(`> "Create a rating widget with stars that saves to an integer attribute"\n\n`);
-    stream.markdown(`I'll ask smart questions, generate the code, build it, and deploy it.\n`);
+    stream.markdown(`I'll ask smart questions, generate the code, build it, and deploy it.\n\n`);
+    stream.markdown(`## 🧠 Self-Learning\n\n`);
+    stream.markdown(`This extension learns from successful builds! Use \`/patterns\` to see what I've learned.\n`);
 
     return {};
   }

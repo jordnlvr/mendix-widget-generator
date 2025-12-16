@@ -159,10 +159,31 @@ export async function wizard(providedName) {
     process.exit(0);
   }
 
+  // Step 4: Output Settings
+  console.log(chalk.magenta.bold('\n📂 STEP 4: Output Settings\n'));
+
+  const outputSettings = await prompt([
+    {
+      type: 'input',
+      name: 'outputPath',
+      message: 'Output directory (where to create the widget)',
+      initial: '.',
+    },
+    {
+      type: 'input',
+      name: 'mendixProjectPath',
+      message: 'Mendix project widgets folder (optional - for auto-deploy)',
+      initial: '',
+      hint: 'Leave empty to skip auto-deploy',
+    },
+  ]);
+
   return {
     widget: basicInfo,
     properties,
     events,
+    outputPath: outputSettings.outputPath,
+    mendixProjectPath: outputSettings.mendixProjectPath || null,
   };
 }
 

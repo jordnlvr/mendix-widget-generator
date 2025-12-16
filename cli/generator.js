@@ -103,6 +103,21 @@ export async function generateFromConfig(config, options = {}) {
             console.log(
               chalk.green(`  ✅ MPK created: ${path.basename(mpks[0])} (${mpkSize.toFixed(1)} KB)`)
             );
+
+            // Auto-deploy to Mendix project if path provided
+            const mendixPath = options.mendixProjectPath || widgetConfig.mendixProjectPath;
+            if (mendixPath) {
+              try {
+                const widgetsFolder = mendixPath.endsWith('widgets') 
+                  ? mendixPath 
+                  : path.join(mendixPath, 'widgets');
+                await fs.ensureDir(widgetsFolder);
+                await fs.copy(mpks[0], path.join(widgetsFolder, path.basename(mpks[0])));
+                console.log(chalk.green(`  ✅ Deployed to: ${widgetsFolder}`));
+              } catch (deployErr) {
+                console.log(chalk.yellow(`  ⚠️ Could not auto-deploy: ${deployErr.message}`));
+              }
+            }
           }
         }
       } catch (err) {

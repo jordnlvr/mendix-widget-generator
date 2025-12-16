@@ -68,6 +68,7 @@ program
   .option('-t, --template <name>', 'Use a template (run --list-templates to see options)')
   .option('-c, --config <path>', 'Path to JSON config file')
   .option('-o, --output <path>', 'Output directory', '.')
+  .option('-m, --mendix <path>', 'Mendix project widgets folder (for auto-deploy)')
   .option('-l, --list-templates', 'List available templates')
   .option('--no-install', 'Skip npm install')
   .option('--no-build', 'Skip npm run build')
@@ -82,19 +83,27 @@ program
 
     // Config file mode
     if (options.config) {
-      await generateFromConfig(options.config, options);
+      await generateFromConfig(options.config, { ...options, mendixProjectPath: options.mendix });
       return;
     }
 
     // Template mode
     if (options.template) {
-      await generateFromTemplate(options.template, name, options);
+      await generateFromTemplate(options.template, name, { ...options, mendixProjectPath: options.mendix });
       return;
     }
 
     // Interactive wizard (default)
     const config = await wizard(name);
-    await generateFromConfig(config, options);
+    
+    // Use paths from wizard or command line
+    const finalOptions = {
+      ...options,
+      output: config.outputPath || options.output,
+      mendixProjectPath: config.mendixProjectPath || options.mendix,
+    };
+    
+    await generateFromConfig(config, finalOptions);
   });
 
 program.parse();

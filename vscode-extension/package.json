@@ -2,7 +2,7 @@
   "name": "mendix-widget-agent",
   "displayName": "Mendix Widget Agent",
   "description": "AI-powered Mendix Pluggable Widget generator with natural language interface - Now with self-learning nucleus!",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "publisher": "jordnlvr",
   "icon": "resources/icon.png",
   "repository": {

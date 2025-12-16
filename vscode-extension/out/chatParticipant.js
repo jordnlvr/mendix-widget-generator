@@ -74,6 +74,22 @@ class MendixWidgetChatParticipant {
         const sessionId = this.getSessionId(context);
         let state = this.conversationStates.get(sessionId) || { stage: 'initial' };
         try {
+            // Handle commands that DON'T need a model first
+            if (request.command) {
+                const noModelCommands = ['help', 'status', 'patterns', 'template'];
+                if (noModelCommands.includes(request.command)) {
+                    return await this.handleCommand(request, context, stream, token, state, sessionId);
+                }
+            }
+            // For commands/operations that need a model, check availability
+            if (!request.model) {
+                stream.markdown(`⚠️ **Language model not available**\n\n`);
+                stream.markdown(`This might happen if Copilot is still initializing. Try:\n`);
+                stream.markdown(`1. Wait a few seconds and try again\n`);
+                stream.markdown(`2. Make sure GitHub Copilot is signed in\n`);
+                stream.markdown(`3. Try \`/help\` or \`/template\` which don't need AI\n`);
+                return {};
+            }
             // Handle specific commands
             if (request.command) {
                 return await this.handleCommand(request, context, stream, token, state, sessionId);
@@ -82,7 +98,7 @@ class MendixWidgetChatParticipant {
             return await this.handleNaturalLanguage(request, context, stream, token, state, sessionId);
         }
         catch (error) {
-            stream.markdown(`\n\n❌ **Error:** ${error instanceof Error ? error.message : 'Unknown error'}\n`);
+            stream.markdown(`\\n\\n❌ **Error:** ${error instanceof Error ? error.message : 'Unknown error'}\\n`);
             return { errorDetails: { message: String(error) } };
         }
     }
@@ -427,7 +443,7 @@ class MendixWidgetChatParticipant {
         return {};
     }
     async showHelp(stream) {
-        stream.markdown(`# 🎨 Mendix Widget Agent v1.3.2\n\n`);
+        stream.markdown(`# 🎨 Mendix Widget Agent v1.3.4\n\n`);
         stream.markdown(`I help you create Mendix Pluggable Widgets using natural language.\n\n`);
         stream.markdown(`## 📝 Commands\n\n`);
         stream.markdown(`| Command | Description |\n`);

@@ -10,7 +10,9 @@ import * as vscode from 'vscode';
 import { BeastModeResearch } from './beastModeResearch';
 import { BuildLoop } from './buildLoop';
 import { WidgetConfig, WidgetGeneratorBridge } from './generatorBridge';
+import { KnowledgeSharing } from './knowledgeSharing';
 import { MendixPathValidator, PathValidationResult } from './mendixPathValidator';
+import { SelfUpdate, VERSION } from './selfUpdate';
 
 // Conversation state for multi-turn interactions
 interface ConversationState {
@@ -31,6 +33,8 @@ export class MendixWidgetChatParticipant {
   private generatorBridge: WidgetGeneratorBridge;
   private beastMode: BeastModeResearch;
   private buildLoop: BuildLoop;
+  private knowledgeSharing: KnowledgeSharing;
+  private selfUpdate: SelfUpdate;
 
   // Store conversation state per chat session
   private conversationStates: Map<string, ConversationState> = new Map();
@@ -45,6 +49,8 @@ export class MendixWidgetChatParticipant {
     this.generatorBridge = generatorBridge;
     this.beastMode = new BeastModeResearch();
     this.buildLoop = new BuildLoop(generatorBridge, this.beastMode);
+    this.knowledgeSharing = new KnowledgeSharing();
+    this.selfUpdate = new SelfUpdate();
   }
 
   async handleRequest(
@@ -95,6 +101,12 @@ export class MendixWidgetChatParticipant {
 
       case 'research':
         return await this.handleResearch(request, stream, token);
+
+      case 'update':
+        return await this.handleUpdate(request, stream, token);
+
+      case 'status':
+        return await this.handleStatus(stream, token);
 
       default:
         stream.markdown(`Unknown command: ${request.command}`);
@@ -699,5 +711,103 @@ Be intelligent:
     ];
     const lower = input.toLowerCase();
     return widgetKeywords.some((kw) => lower.includes(kw));
+  }
+
+  /**
+   * Handle /update command - check for and install updates
+   */
+  private async handleUpdate(
+    request: vscode.ChatRequest,
+    stream: vscode.ChatResponseStream,
+    token: vscode.CancellationToken
+  ): Promise<vscode.ChatResult> {
+    stream.markdown(`# 🔄 Update Mendix Widget Agent\n\n`);
+
+    const updateInfo = await this.selfUpdate.checkForUpdates();
+
+    if (!updateInfo.updateAvailable) {
+      stream.markdown(`✅ **You're on the latest version!**\n\n`);
+      stream.markdown(`- Current Version: **${updateInfo.currentVersion}**\n`);
+      stream.markdown(`- Latest Version: **${updateInfo.latestVersion}**\n\n`);
+      return {};
+    }
+
+    stream.markdown(`📦 **Update Available!**\n\n`);
+    stream.markdown(`- Current Version: ${updateInfo.currentVersion}\n`);
+    stream.markdown(`- Latest Version: **${updateInfo.latestVersion}**\n\n`);
+
+    if (updateInfo.releaseNotes) {
+      stream.markdown(`### Release Notes\n${updateInfo.releaseNotes}\n\n`);
+    }
+
+    stream.markdown(`---\n\n`);
+    stream.markdown(`### Installing Update...\n\n`);
+
+    const success = await this.selfUpdate.update((msg) => stream.markdown(msg));
+
+    if (!success) {
+      stream.markdown(`\n### Manual Update Instructions\n`);
+      stream.markdown(this.selfUpdate.getManualUpdateInstructions());
+    }
+
+    return {};
+  }
+
+  /**
+   * Handle /status command - show version and knowledge base status
+   */
+  private async handleStatus(
+    stream: vscode.ChatResponseStream,
+    token: vscode.CancellationToken
+  ): Promise<vscode.ChatResult> {
+    stream.markdown(`# 📊 Mendix Widget Agent Status\n\n`);
+
+    // Version info
+    stream.markdown(`## Version\n`);
+    stream.markdown(`- **Installed Version:** ${VERSION}\n\n`);
+
+    // Check for updates
+    const updateInfo = await this.selfUpdate.checkForUpdates();
+    if (updateInfo.updateAvailable) {
+      stream.markdown(`⚠️ **Update Available:** ${updateInfo.latestVersion}\n`);
+      stream.markdown(`   Use \`/update\` to install.\n\n`);
+    } else {
+      stream.markdown(`✅ Up to date\n\n`);
+    }
+
+    // Knowledge base status
+    stream.markdown(`## Knowledge Sharing\n`);
+    const kbStatus = this.knowledgeSharing.getStatus();
+    if (kbStatus.enabled) {
+      stream.markdown(`✅ **Connected to Knowledge Base**\n`);
+      stream.markdown(`- Path: \`${kbStatus.path}\`\n`);
+      stream.markdown(`- Entries: ${kbStatus.entriesCount}\n`);
+      stream.markdown(`\nResearch findings and successful patterns are being saved!\n\n`);
+    } else {
+      stream.markdown(`⚠️ **Knowledge Base Not Found**\n`);
+      stream.markdown(`Research findings won't be saved for future use.\n`);
+      stream.markdown(`To enable, ensure mendix-mcp-server is in the expected location.\n\n`);
+    }
+
+    // Available commands
+    stream.markdown(`## Available Commands\n\n`);
+    stream.markdown(`| Command | Description |\n`);
+    stream.markdown(`|---------|-------------|\n`);
+    stream.markdown(`| \`/create\` | Create widget from natural language |\n`);
+    stream.markdown(`| \`/template\` | Use a pre-built template |\n`);
+    stream.markdown(`| \`/deploy\` | Deploy to Mendix project |\n`);
+    stream.markdown(`| \`/fix\` | Analyze and fix build errors |\n`);
+    stream.markdown(`| \`/research\` | Beast Mode pattern research |\n`);
+    stream.markdown(`| \`/update\` | Check for and install updates |\n`);
+    stream.markdown(`| \`/status\` | Show this status page |\n\n`);
+
+    // Configuration
+    const config = vscode.workspace.getConfiguration('mendixWidget');
+    stream.markdown(`## Configuration\n`);
+    stream.markdown(`- Default Mendix Project: \`${config.get('defaultMendixProject') || 'Not set'}\`\n`);
+    stream.markdown(`- Default Work Folder: \`${config.get('defaultWorkFolder') || 'Not set'}\`\n`);
+    stream.markdown(`- Beast Mode: ${config.get('beastModeEnabled', true) ? '✅ Enabled' : '❌ Disabled'}\n`);
+
+    return {};
   }
 }

@@ -2,7 +2,7 @@
   "name": "mendix-widget-agent",
   "displayName": "Mendix Widget Agent",
   "description": "AI-powered Mendix Pluggable Widget generator with natural language interface",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "publisher": "jordnlvr",
   "repository": {
     "type": "git",
@@ -55,6 +55,14 @@
           {
             "name": "research",
             "description": "Research widget patterns using Beast Mode (exhaustive search)"
+          },
+          {
+            "name": "update",
+            "description": "Check for updates and install the latest version from GitHub"
+          },
+          {
+            "name": "status",
+            "description": "Show version, knowledge base status, and check for updates"
           }
         ]
       }

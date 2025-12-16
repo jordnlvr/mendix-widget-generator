@@ -1,7 +1,7 @@
 {
   "name": "create-mendix-widget",
-  "version": "2.1.0",
-  "description": "🧙 The fastest way to create Mendix pluggable widgets. Zero to deployed in 60 seconds.",
+  "version": "3.0.0",
+  "description": "🧙 The fastest way to create Mendix pluggable widgets. Zero to deployed in 60 seconds. Now with AI-powered VS Code extension!",
   "keywords": [
     "mendix",
     "widget",
@@ -9,7 +9,10 @@
     "generator",
     "scaffold",
     "cli",
-    "low-code"
+    "low-code",
+    "ai",
+    "vscode",
+    "copilot"
   ],
   "homepage": "https://github.com/jordnlvr/mendix-widget-generator#readme",
   "bugs": {

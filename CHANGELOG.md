@@ -5,6 +5,59 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2025-01-15
+
+### 🤖 Major Release: AI-Powered VS Code Extension
+
+This release adds an AI-driven VS Code Chat Participant that understands natural language
+and generates Mendix widgets autonomously.
+
+### Added
+
+- **🧠 VS Code Chat Participant (`@mendix-widget`)**
+
+  - Natural language widget creation: "create a rating widget with 5 stars"
+  - Smart clarifying questions powered by LLM
+  - `/create` - Create widgets from natural language
+  - `/template` - Use built-in templates
+  - `/deploy` - Deploy to Mendix project
+  - `/fix` - Analyze and fix build errors
+  - `/research` - Beast Mode pattern research
+
+- **🔍 Intelligent Path Validation**
+
+  - Automatically finds `.mpr` files in given path
+  - Navigates to correct `widgets` folder
+  - Checks for naming conflicts
+  - Generates unique names when needed
+
+- **🔬 Beast Mode Research Protocol**
+
+  - 6-tier exhaustive search: Official docs → GitHub → npm → Community → Archives → Video
+  - Never gives up - researches until solution found
+  - Integrates with error analysis for auto-fixes
+
+- **🔄 Self-Healing Build Loop**
+
+  - Research → Build → Test → Fix cycle
+  - Pattern-based fast fixes (missing imports, etc.)
+  - AI-powered fixes for complex errors
+  - Up to 3 automatic retry attempts
+
+- **📖 Comprehensive Documentation**
+  - VS Code Extension README with user guide
+  - ARCHITECTURE.md with technical details
+  - GitHub Pages dedicated extension page
+
+### Technical Details
+
+- VS Code Chat Participant API (v1.95+)
+- LLM integration via `vscode.lm.selectChatModels`
+- TypeScript source in `vscode-extension/src/`
+- Bridges to existing CLI generator engine
+
+---
+
 ## [2.0.0] - 2025-12-15
 
 ### 🎉 Major Release: World-Class Edition

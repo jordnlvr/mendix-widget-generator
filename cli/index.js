@@ -89,20 +89,23 @@ program
 
     // Template mode
     if (options.template) {
-      await generateFromTemplate(options.template, name, { ...options, mendixProjectPath: options.mendix });
+      await generateFromTemplate(options.template, name, {
+        ...options,
+        mendixProjectPath: options.mendix,
+      });
       return;
     }
 
     // Interactive wizard (default)
     const config = await wizard(name);
-    
+
     // Use paths from wizard or command line
     const finalOptions = {
       ...options,
       output: config.outputPath || options.output,
       mendixProjectPath: config.mendixProjectPath || options.mendix,
     };
-    
+
     await generateFromConfig(config, finalOptions);
   });
 

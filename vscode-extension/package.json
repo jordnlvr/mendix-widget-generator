@@ -1,0 +1,133 @@
+{
+  "name": "mendix-widget-agent",
+  "displayName": "Mendix Widget Agent",
+  "description": "AI-powered Mendix Pluggable Widget generator with natural language interface",
+  "version": "1.0.0",
+  "publisher": "jordnlvr",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jordnlvr/mendix-widget-generator"
+  },
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Chat",
+    "Machine Learning",
+    "Other"
+  ],
+  "keywords": [
+    "mendix",
+    "widget",
+    "pluggable widget",
+    "low-code",
+    "ai",
+    "copilot",
+    "chat participant"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "chatParticipants": [
+      {
+        "id": "mendix-widget.agent",
+        "fullName": "Mendix Widget Agent",
+        "name": "mendix-widget",
+        "description": "AI-powered Mendix Pluggable Widget generator. Describe what you want to build in natural language.",
+        "isSticky": true,
+        "commands": [
+          {
+            "name": "create",
+            "description": "Create a new Mendix pluggable widget from natural language description"
+          },
+          {
+            "name": "template",
+            "description": "Use a built-in template (status-badge, data-card, progress-bar, etc.)"
+          },
+          {
+            "name": "deploy",
+            "description": "Deploy an existing widget to a Mendix project"
+          },
+          {
+            "name": "fix",
+            "description": "Analyze and fix widget build errors"
+          },
+          {
+            "name": "research",
+            "description": "Research widget patterns using Beast Mode (exhaustive search)"
+          }
+        ]
+      }
+    ],
+    "commands": [
+      {
+        "command": "mendix-widget.setMendixProject",
+        "title": "Mendix Widget: Set Mendix Project Path"
+      },
+      {
+        "command": "mendix-widget.setWorkFolder",
+        "title": "Mendix Widget: Set Work Folder"
+      },
+      {
+        "command": "mendix-widget.showTemplates",
+        "title": "Mendix Widget: Show Available Templates"
+      }
+    ],
+    "configuration": {
+      "title": "Mendix Widget Agent",
+      "properties": {
+        "mendixWidget.defaultMendixProject": {
+          "type": "string",
+          "default": "",
+          "description": "Default Mendix project path for widget deployment"
+        },
+        "mendixWidget.defaultWorkFolder": {
+          "type": "string",
+          "default": "",
+          "description": "Default folder for generating widgets"
+        },
+        "mendixWidget.autoInstallDependencies": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically run npm install after generating a widget"
+        },
+        "mendixWidget.autoBuild": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically build the widget after generation"
+        },
+        "mendixWidget.autoDeploy": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically deploy to Mendix project after successful build"
+        },
+        "mendixWidget.beastModeEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable Beast Mode exhaustive research for complex widgets"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "lint": "eslint src --ext ts",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/vscode": "^1.95.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "eslint": "^8.54.0",
+    "typescript": "^5.3.0",
+    "@vscode/vsce": "^2.22.0"
+  },
+  "dependencies": {
+    "fs-extra": "^11.2.0"
+  }
+}

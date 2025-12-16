@@ -108,8 +108,8 @@ export async function generateFromConfig(config, options = {}) {
             const mendixPath = options.mendixProjectPath || widgetConfig.mendixProjectPath;
             if (mendixPath) {
               try {
-                const widgetsFolder = mendixPath.endsWith('widgets') 
-                  ? mendixPath 
+                const widgetsFolder = mendixPath.endsWith('widgets')
+                  ? mendixPath
                   : path.join(mendixPath, 'widgets');
                 await fs.ensureDir(widgetsFolder);
                 await fs.copy(mpks[0], path.join(widgetsFolder, path.basename(mpks[0])));

@@ -9,6 +9,30 @@
 
 ---
 
+## 🤖 NEW: AI-Powered VS Code Extension
+
+**Describe widgets in natural language. Let AI handle the rest.**
+
+```
+You: @mendix-widget create a rating widget with 5 stars
+
+AI: Creating Rating widget with:
+    • Properties: value (attribute), maxStars (integer)
+    • Events: onChange
+    ✅ Widget deployed to MyApp\widgets\rating.mpk!
+```
+
+📖 **[VS Code Extension Documentation →](vscode-extension/README.md)**
+
+### Features
+
+- 🧠 **Natural Language** - "Create a progress bar that shows completion percentage"
+- 🔍 **Smart Path Validation** - Finds .mpr, navigates to widgets folder, checks conflicts
+- 🔬 **Beast Mode Research** - 6-tier exhaustive search when stuck
+- 🔄 **Self-Healing Builds** - Analyzes errors, applies fixes, retries automatically
+
+---
+
 ## 🌐 Live Demo & Documentation
 
 **📖 Documentation Site:** [jordnlvr.github.io/mendix-widget-generator](https://jordnlvr.github.io/mendix-widget-generator/)
@@ -19,19 +43,34 @@
 
 ## ❓ What Is This?
 
-This is a **code generator tool** (NOT an AI chatbot) that creates Mendix pluggable widgets. It provides:
+This project provides **multiple ways** to create Mendix pluggable widgets:
 
-1. **Visual Web Configurator** - A form-based UI where you click buttons, fill in fields, and download a config file
-2. **CLI Wizard** - An interactive command-line tool that asks you questions step by step
-3. **Template Library** - 10 pre-built widget configurations you can use as starting points
-4. **Auto-Build & Deploy** - Automatically runs npm install, builds the widget, and optionally deploys to your Mendix project
+### 🤖 Option 1: AI Chat Participant (VS Code)
 
-### How It Works
+Natural language widget creation. Just describe what you want.
+→ See [vscode-extension/README.md](vscode-extension/README.md)
+
+### 🖥️ Option 2: Visual Web Configurator
+
+A form-based UI where you click buttons, fill in fields, and download a config file.
+→ [Open Configurator](https://jordnlvr.github.io/mendix-widget-generator/configurator.html)
+
+### ⌨️ Option 3: CLI Wizard
+
+An interactive command-line tool that asks you questions step by step.
+→ `npx create-mendix-widget`
+
+### 📦 Option 4: Template Library
+
+10 pre-built widget configurations you can use as starting points.
+→ `npx create-mendix-widget --template status-badge`
+
+### How It Works (All Options)
 
 ```
 ┌─────────────────────┐      ┌──────────────────┐      ┌─────────────────┐
-│  Web Configurator   │ ──▶  │   JSON Config    │ ──▶  │  Generated      │
-│  (or CLI Wizard)    │      │   (widget spec)  │      │  Widget Code    │
+│  AI / Web / CLI     │ ──▶  │   JSON Config    │ ──▶  │  Generated      │
+│  (your choice)      │      │   (widget spec)  │      │  Widget Code    │
 └─────────────────────┘      └──────────────────┘      └─────────────────┘
          │                                                      │
          │                                                      ▼
@@ -45,7 +84,15 @@ This is a **code generator tool** (NOT an AI chatbot) that creates Mendix plugga
 
 ## 🚀 Quick Start
 
-### Option 1: Web Configurator (Easiest)
+### Option 1: VS Code Extension (AI-Powered) 🆕
+
+1. Install the extension (see [vscode-extension/README.md](vscode-extension/README.md))
+2. Open Chat (`Ctrl+Shift+I`)
+3. Type: `@mendix-widget create a status badge widget`
+4. Answer AI's clarifying questions
+5. Say "go" to build and deploy!
+
+### Option 2: Web Configurator (Visual)
 
 1. Go to **[jordnlvr.github.io/mendix-widget-generator/configurator.html](https://jordnlvr.github.io/mendix-widget-generator/configurator.html)**
 2. Click a template (e.g., "Status Badge") or start blank
@@ -56,13 +103,14 @@ This is a **code generator tool** (NOT an AI chatbot) that creates Mendix plugga
    npx create-mendix-widget --config my-widget.json
    ```
 
-### Option 2: CLI Wizard
+### Option 3: CLI Wizard
 
 ```bash
 npx create-mendix-widget
 ```
 
 The wizard will ask:
+
 1. **Widget name** (PascalCase, e.g., `StatusBadge`)
 2. **Display name** (shown in Studio Pro toolbox)
 3. **Description**
@@ -72,7 +120,7 @@ The wizard will ask:
 7. **Output directory** (where to create the widget)
 8. **Mendix project path** (optional - auto-deploys the .mpk)
 
-### Option 3: Use a Template
+### Option 4: Use a Template
 
 ```bash
 # See all templates
@@ -95,18 +143,18 @@ npx create-mendix-widget --config widget-config.json --output ./my-widgets
 
 ## 📦 Built-in Templates
 
-| Template | Description |
-|----------|-------------|
-| `status-badge` | Colored status indicator with label |
-| `data-card` | Card component that repeats for datasource items |
-| `text-input` | Custom text input with validation |
-| `progress-bar` | Visual progress indicator |
-| `icon-button` | Button with icon and optional label |
-| `tabs` | Tabbed content container |
-| `modal-trigger` | Button that opens a modal popup |
-| `file-upload` | Drag-and-drop file uploader |
-| `countdown` | Countdown to a target date/time |
-| `rating` | Interactive star rating component |
+| Template        | Description                                      |
+| --------------- | ------------------------------------------------ |
+| `status-badge`  | Colored status indicator with label              |
+| `data-card`     | Card component that repeats for datasource items |
+| `text-input`    | Custom text input with validation                |
+| `progress-bar`  | Visual progress indicator                        |
+| `icon-button`   | Button with icon and optional label              |
+| `tabs`          | Tabbed content container                         |
+| `modal-trigger` | Button that opens a modal popup                  |
+| `file-upload`   | Drag-and-drop file uploader                      |
+| `countdown`     | Countdown to a target date/time                  |
+| `rating`        | Interactive star rating component                |
 
 ---
 
@@ -115,29 +163,36 @@ npx create-mendix-widget --config widget-config.json --output ./my-widgets
 The visual configurator at **[configurator.html](https://jordnlvr.github.io/mendix-widget-generator/configurator.html)** lets you:
 
 ### 1. Start with a Template
+
 Click any template card (Status Badge, Data Card, etc.) to pre-fill the form with that widget's configuration.
 
 ### 2. Customize the Widget
+
 - **Widget Name**: Must be PascalCase (e.g., `MyWidget`)
 - **Display Name**: What appears in Studio Pro's toolbox
 - **Category**: Determines which toolbox section it appears in
 
 ### 3. Add Properties
+
 Click "+ Add Property" and configure:
+
 - **Key**: camelCase identifier (e.g., `labelText`)
 - **Type**: String, Boolean, Enumeration, Attribute, Datasource, etc.
 - **Caption**: Label shown in Studio Pro
 - **Required**: Whether the property must be set
 
 ### 4. Add Events
+
 Click "+ Add Event" for action handlers like onClick, onChange, onSelect.
 
 ### 5. Export & Generate
+
 - **Copy JSON**: Copy the config to clipboard
 - **Download**: Save as a `.json` file
 - Use with: `npx create-mendix-widget --config your-config.json`
 
 ### 6. Preview Tabs
+
 - **config.json**: The JSON config you'll download
 - **Widget.xml**: Preview of the generated XML
 - **Command**: The CLI command to run
@@ -224,20 +279,20 @@ npx create-mendix-widget --config widget.json --mendix "C:/Projects/MyApp/widget
 
 ## 🎛️ Supported Property Types
 
-| Type | Description | Config Options |
-|------|-------------|----------------|
-| `string` | Text input | `defaultValue` |
-| `boolean` | True/false toggle | `defaultValue` |
-| `integer` | Whole number | `defaultValue` |
-| `decimal` | Decimal number | `defaultValue` |
-| `enumeration` | Dropdown selection | `enumValues: ["a", "b"]`, `defaultValue` |
-| `textTemplate` | Parameterized text | `required` |
-| `expression` | Dynamic expression | `returnType: "String"` |
-| `attribute` | Entity attribute binding | `attributeTypes: ["String"]` |
-| `datasource` | List of objects | `isList: true` |
-| `widgets` | Container for child widgets | `dataSource` |
-| `icon` | Icon from library | |
-| `image` | Static or dynamic image | |
+| Type           | Description                 | Config Options                           |
+| -------------- | --------------------------- | ---------------------------------------- |
+| `string`       | Text input                  | `defaultValue`                           |
+| `boolean`      | True/false toggle           | `defaultValue`                           |
+| `integer`      | Whole number                | `defaultValue`                           |
+| `decimal`      | Decimal number              | `defaultValue`                           |
+| `enumeration`  | Dropdown selection          | `enumValues: ["a", "b"]`, `defaultValue` |
+| `textTemplate` | Parameterized text          | `required`                               |
+| `expression`   | Dynamic expression          | `returnType: "String"`                   |
+| `attribute`    | Entity attribute binding    | `attributeTypes: ["String"]`             |
+| `datasource`   | List of objects             | `isList: true`                           |
+| `widgets`      | Container for child widgets | `dataSource`                             |
+| `icon`         | Icon from library           |                                          |
+| `image`        | Static or dynamic image     |                                          |
 
 ---
 

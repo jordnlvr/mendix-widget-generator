@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mendix Widget Agent - VS Code Extension</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --mendix-blue: #0CABF7;
+      --mendix-dark: #0A1628;
+      --accent-green: #10B981;
+      --accent-purple: #8B5CF6;
+      --text-primary: #1F2937;
+      --text-secondary: #6B7280;
+      --bg-light: #F9FAFB;
+      --border-color: #E5E7EB;
+      --code-bg: #1E293B;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      color: var(--text-primary);
+    }
+
+    .hero {
+      background: linear-gradient(135deg, var(--mendix-dark) 0%, #1E3A5F 100%);
+      color: white;
+      padding: 80px 20px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(90deg, var(--mendix-blue), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: #94A3B8;
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto 30px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 30px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      margin: 5px;
+    }
+
+    .btn-primary {
+      background: var(--mendix-blue);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #0990D4;
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    section {
+      padding: 60px 20px;
+    }
+
+    section:nth-child(even) {
+      background: var(--bg-light);
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    h3 {
+      font-size: 1.4rem;
+      margin: 30px 0 15px;
+    }
+
+    p,
+    li {
+      color: var(--text-secondary);
+    }
+
+    .command-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    .command-table th,
+    .command-table td {
+      padding: 15px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .command-table th {
+      background: var(--bg-light);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .command-table code {
+      background: var(--code-bg);
+      color: var(--mendix-blue);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+
+    .demo-box {
+      background: var(--code-bg);
+      border-radius: 12px;
+      padding: 30px;
+      color: white;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 14px;
+      overflow-x: auto;
+      margin: 30px 0;
+    }
+
+    .demo-box .user {
+      color: var(--accent-green);
+    }
+
+    .demo-box .ai {
+      color: var(--mendix-blue);
+    }
+
+    .demo-box .comment {
+      color: #64748B;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .feature-card {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      border: 1px solid var(--border-color);
+    }
+
+    .feature-card h4 {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tier-list {
+      list-style: none;
+    }
+
+    .tier-list li {
+      padding: 15px;
+      margin: 10px 0;
+      background: white;
+      border-radius: 8px;
+      border-left: 4px solid var(--mendix-blue);
+    }
+
+    .tier-list li strong {
+      color: var(--text-primary);
+    }
+
+    .arch-diagram {
+      background: var(--code-bg);
+      color: var(--mendix-blue);
+      padding: 25px;
+      border-radius: 12px;
+      font-family: monospace;
+      font-size: 12px;
+      overflow-x: auto;
+      white-space: pre;
+      line-height: 1.4;
+    }
+
+    footer {
+      background: var(--mendix-dark);
+      color: #94A3B8;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    footer a {
+      color: var(--mendix-blue);
+      text-decoration: none;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: var(--mendix-blue);
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <section class="hero">
+    <a href="index.html" class="back-link">← Back to Home</a>
+    <h1>🤖 Mendix Widget <span>Agent</span></h1>
+    <p>AI-powered VS Code Chat Participant for Mendix Pluggable Widget development. Describe what you need in natural
+      language.</p>
+    <a href="https://github.com/jordnlvr/mendix-widget-generator/tree/main/vscode-extension" class="btn btn-primary">
+      📦 View on GitHub
+    </a>
+    <a href="https://github.com/jordnlvr/mendix-widget-generator/blob/main/vscode-extension/README.md"
+      class="btn btn-secondary">
+      📖 Documentation
+    </a>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>Quick Demo</h2>
+      <div class="demo-box">
+        <span class="user">You:</span> @mendix-widget create a rating widget with 5 stars
+
+        <span class="ai">🤖 AI:</span> I'll create a Rating widget! Let me confirm:
+        • Properties: value (attribute), maxStars (integer)
+        • Events: onChange
+
+        <span class="comment">Where should I create this widget?</span>
+
+        <span class="user">You:</span> D:\MendixProjects\MyApp
+
+        <span class="ai">🤖 AI:</span> ✅ Mendix project found: MyApp
+        📁 Widgets folder: D:\MendixProjects\MyApp\widgets
+
+        <span class="comment">Ready to build! Say "go" to proceed.</span>
+
+        <span class="user">You:</span> go
+
+        <span class="ai">🤖 AI:</span> 🏗️ Building Rating widget...
+        ✅ Generated widget files
+        ✅ Installing dependencies...
+        ✅ Building widget...
+        ✅ MPK created: rating.mpk (8.2 KB)
+        🚀 Deployed to: MyApp\widgets
+
+        <span class="comment">Press F4 in Studio Pro to refresh!</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>Commands</h2>
+      <table class="command-table">
+        <thead>
+          <tr>
+            <th>Command</th>
+            <th>Description</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>/create</code></td>
+            <td>Create widget from natural language</td>
+            <td><code>/create status badge with colors</code></td>
+          </tr>
+          <tr>
+            <td><code>/template</code></td>
+            <td>Use a pre-built template</td>
+            <td><code>/template status-badge</code></td>
+          </tr>
+          <tr>
+            <td><code>/deploy</code></td>
+            <td>Deploy to Mendix project</td>
+            <td><code>/deploy D:\MendixProjects\MyApp</code></td>
+          </tr>
+          <tr>
+            <td><code>/fix</code></td>
+            <td>Analyze and fix build errors</td>
+            <td><code>/fix</code> (paste errors)</td>
+          </tr>
+          <tr>
+            <td><code>/research</code></td>
+            <td>Beast Mode pattern research</td>
+            <td><code>/research drag and drop</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>🔬 Beast Mode Research</h2>
+      <p style="text-align: center; margin-bottom: 30px;">6-tier exhaustive search protocol. Never says "I don't know."
+      </p>
+
+      <ul class="tier-list">
+        <li><strong>Tier 1: Official Documentation</strong> — docs.mendix.com, API references, how-to guides</li>
+        <li><strong>Tier 2: GitHub Code 🏆</strong> — mendix/widgets-resources, sdk-demo (THE GOLD MINES!)</li>
+        <li><strong>Tier 3: npm Packages</strong> — @mendix/* packages and their dependents</li>
+        <li><strong>Tier 4: Community</strong> — Forums, Stack Overflow, Reddit</li>
+        <li><strong>Tier 5: Archives</strong> — Wayback Machine for old/removed documentation</li>
+        <li><strong>Tier 6: Multimedia</strong> — YouTube, Mendix Academy, Mendix World</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>Key Features</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h4>🧠 Natural Language</h4>
+          <p>Describe widgets in plain English. AI infers properties, events, and types automatically.</p>
+        </div>
+        <div class="feature-card">
+          <h4>🔍 Smart Path Validation</h4>
+          <p>Finds .mpr files, navigates to widgets folder, checks for naming conflicts.</p>
+        </div>
+        <div class="feature-card">
+          <h4>🔄 Auto-Fix Loop</h4>
+          <p>Analyzes build errors, researches solutions, applies fixes, and retries (up to 3 times).</p>
+        </div>
+        <div class="feature-card">
+          <h4>🚀 Auto-Deploy</h4>
+          <p>Deploys .mpk directly to your Mendix project's widgets folder.</p>
+        </div>
+        <div class="feature-card">
+          <h4>📦 10+ Templates</h4>
+          <p>Pre-built patterns: status badge, data card, rating, progress bar, and more.</p>
+        </div>
+        <div class="feature-card">
+          <h4>⚙️ Configurable</h4>
+          <p>Save default paths, enable/disable auto-build, auto-deploy, and Beast Mode.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>Architecture</h2>
+      <div class="arch-diagram">
+        ┌─────────────────────────────────────────────────────────────────────┐
+        │ @mendix-widget Chat Participant │
+        ├─────────────────────────────────────────────────────────────────────┤
+        │ │
+        │ User: "Create a pie chart widget" │
+        │ ↓ │
+        │ ┌────────────────────────────────────────────────────────────────┐ │
+        │ │ AI BRAIN (LLM) │ │
+        │ │ Understanding → Questions → Config Generation │ │
+        │ └────────────────────────────────────────────────────────────────┘ │
+        │ ↓ │
+        │ ┌────────────────────────────────────────────────────────────────┐ │
+        │ │ PATH VALIDATOR (Smart!) │ │
+        │ │ ✓ Find .mpr ✓ widgets folder ✓ Conflict check │ │
+        │ └────────────────────────────────────────────────────────────────┘ │
+        │ ↓ │
+        │ ┌────────────────────────────────────────────────────────────────┐ │
+        │ │ GENERATOR ENGINE │ │
+        │ │ cli/generator.js → npm install → npm build │ │
+        │ └────────────────────────────────────────────────────────────────┘ │
+        │ ↓ │
+        │ ┌────────────────────────────────────────────────────────────────┐ │
+        │ │ BUILD LOOP (Self-Healing!) │ │
+        │ │ Build → Error? → Research → Fix → Retry → Deploy │ │
+        │ └────────────────────────────────────────────────────────────────┘ │
+        │ ↓ │
+        │ ✅ Widget deployed! Press F4 in Studio Pro. │
+        │ │
+        └─────────────────────────────────────────────────────────────────────┘
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>Installation</h2>
+
+      <h3>From Source</h3>
+      <div class="demo-box">
+        <span class="comment"># Clone the repository</span>
+        git clone https://github.com/jordnlvr/mendix-widget-generator.git
+        cd mendix-widget-generator/vscode-extension
+
+        <span class="comment"># Install dependencies</span>
+        npm install
+
+        <span class="comment"># Build</span>
+        npm run compile
+
+        <span class="comment"># Open in VS Code and press F5 to test</span>
+      </div>
+
+      <h3>Package as VSIX</h3>
+      <div class="demo-box">
+        npm run package
+        <span class="comment"># Creates mendix-widget-agent-1.0.0.vsix</span>
+
+        <span class="comment"># Install in VS Code:</span>
+        code --install-extension mendix-widget-agent-1.0.0.vsix
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Part of the <a href="index.html">Mendix Widget Generator</a> project</p>
+    <p style="margin-top: 10px;">
+      <a href="https://github.com/jordnlvr/mendix-widget-generator">GitHub</a> ·
+      <a href="https://github.com/jordnlvr/mendix-widget-generator/issues">Issues</a> ·
+      MIT License
+    </p>
+  </footer>
+</body>
+
+</html>

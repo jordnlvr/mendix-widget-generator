@@ -4,11 +4,14 @@
  * Handles all @mendix-widget chat interactions with AI-driven responses.
  * This is the brain of the operation - understanding natural language,
  * asking smart questions, and orchestrating widget creation.
+ * 
+ * NOW WITH DYNAMIC PATTERNS: The nucleus that evolves as you build widgets!
  */
 
 import * as vscode from 'vscode';
 import { BeastModeResearch } from './beastModeResearch';
 import { BuildLoop } from './buildLoop';
+import { DynamicPatterns } from './dynamicPatterns';
 import { WidgetConfig, WidgetGeneratorBridge } from './generatorBridge';
 import { KnowledgeSharing } from './knowledgeSharing';
 import { MendixPathValidator, PathValidationResult } from './mendixPathValidator';
@@ -35,6 +38,7 @@ export class MendixWidgetChatParticipant {
   private buildLoop: BuildLoop;
   private knowledgeSharing: KnowledgeSharing;
   private selfUpdate: SelfUpdate;
+  private dynamicPatterns: DynamicPatterns;
 
   // Store conversation state per chat session
   private conversationStates: Map<string, ConversationState> = new Map();
@@ -48,6 +52,7 @@ export class MendixWidgetChatParticipant {
     this.pathValidator = pathValidator;
     this.generatorBridge = generatorBridge;
     this.beastMode = new BeastModeResearch();
+    this.dynamicPatterns = new DynamicPatterns();
     this.buildLoop = new BuildLoop(generatorBridge, this.beastMode);
     this.knowledgeSharing = new KnowledgeSharing();
     this.selfUpdate = new SelfUpdate();
@@ -107,6 +112,12 @@ export class MendixWidgetChatParticipant {
 
       case 'status':
         return await this.handleStatus(stream, token);
+
+      case 'patterns':
+        return await this.handlePatterns(stream, token);
+
+      case 'learn':
+        return await this.handleLearn(request, stream, token);
 
       default:
         stream.markdown(`Unknown command: ${request.command}`);
@@ -789,6 +800,18 @@ Be intelligent:
       stream.markdown(`To enable, ensure mendix-mcp-server is in the expected location.\n\n`);
     }
 
+    // Dynamic Patterns status (the nucleus!)
+    stream.markdown(`## 🔮 The Nucleus (Dynamic Patterns)\n`);
+    const patternStats = this.dynamicPatterns.getStats();
+    stream.markdown(`| Category | Count |\n`);
+    stream.markdown(`|----------|-------|\n`);
+    stream.markdown(`| Error Fixes | ${patternStats.errorFixes} |\n`);
+    stream.markdown(`| Widget Templates | ${patternStats.templates} |\n`);
+    stream.markdown(`| SDK APIs | ${patternStats.sdkApis} |\n`);
+    stream.markdown(`| Best Practices | ${patternStats.bestPractices} |\n`);
+    stream.markdown(`| **Learned (from experience)** | **${patternStats.learnedPatterns}** |\n\n`);
+    stream.markdown(`Use \`/patterns\` for details, \`/learn\` to add new patterns.\n\n`);
+
     // Available commands
     stream.markdown(`## Available Commands\n\n`);
     stream.markdown(`| Command | Description |\n`);
@@ -798,6 +821,8 @@ Be intelligent:
     stream.markdown(`| \`/deploy\` | Deploy to Mendix project |\n`);
     stream.markdown(`| \`/fix\` | Analyze and fix build errors |\n`);
     stream.markdown(`| \`/research\` | Beast Mode pattern research |\n`);
+    stream.markdown(`| \`/patterns\` | View learned patterns (the nucleus) |\n`);
+    stream.markdown(`| \`/learn\` | Teach new patterns manually |\n`);
     stream.markdown(`| \`/update\` | Check for and install updates |\n`);
     stream.markdown(`| \`/status\` | Show this status page |\n\n`);
 
@@ -811,6 +836,151 @@ Be intelligent:
     stream.markdown(
       `- Beast Mode: ${config.get('beastModeEnabled', true) ? '✅ Enabled' : '❌ Disabled'}\n`
     );
+
+    return {};
+  }
+
+  /**
+   * Handle /patterns command - show the nucleus (learned patterns)
+   */
+  private async handlePatterns(
+    stream: vscode.ChatResponseStream,
+    token: vscode.CancellationToken
+  ): Promise<vscode.ChatResult> {
+    stream.markdown(`# 🔮 The Nucleus - Dynamic Patterns\n\n`);
+    stream.markdown(`These are the patterns I've learned from building widgets. They get better over time!\n\n`);
+
+    const stats = this.dynamicPatterns.getStats();
+
+    // Summary
+    stream.markdown(`## 📊 Summary\n\n`);
+    stream.markdown(`| Category | Total | Learned |\n`);
+    stream.markdown(`|----------|-------|--------|\n`);
+    stream.markdown(`| Error Fixes | ${stats.errorFixes} | - |\n`);
+    stream.markdown(`| Widget Templates | ${stats.templates} | - |\n`);
+    stream.markdown(`| SDK API Patterns | ${stats.sdkApis} | - |\n`);
+    stream.markdown(`| Best Practices | ${stats.bestPractices} | - |\n`);
+    stream.markdown(`| **Total** | **${stats.totalPatterns}** | **${stats.learnedPatterns}** |\n\n`);
+
+    // Error Fixes
+    stream.markdown(`## 🔧 Error Fix Patterns\n\n`);
+    const errorFixes = this.dynamicPatterns.getMatchingErrorFixes('');
+    if (errorFixes.length > 0) {
+      for (const fix of errorFixes.slice(0, 5)) {
+        const confidence = (fix.confidence * 100).toFixed(0);
+        const successRate = fix.successCount + fix.failureCount > 0 
+          ? ((fix.successCount / (fix.successCount + fix.failureCount)) * 100).toFixed(0)
+          : 'N/A';
+        stream.markdown(`### ${fix.fix.description}\n`);
+        stream.markdown(`- **Pattern:** \`${fix.errorPattern.substring(0, 60)}...\`\n`);
+        stream.markdown(`- **Confidence:** ${confidence}%\n`);
+        stream.markdown(`- **Success Rate:** ${successRate}% (${fix.successCount} successes, ${fix.failureCount} failures)\n`);
+        stream.markdown(`- **Source:** ${fix.source}\n\n`);
+      }
+      if (errorFixes.length > 5) {
+        stream.markdown(`*... and ${errorFixes.length - 5} more*\n\n`);
+      }
+    } else {
+      stream.markdown(`*No patterns yet. Build some widgets to start learning!*\n\n`);
+    }
+
+    // Best Practices
+    stream.markdown(`## 💡 Best Practices\n\n`);
+    const practices = this.dynamicPatterns.getBestPractices();
+    for (const practice of practices.slice(0, 3)) {
+      stream.markdown(`### ${practice.title}\n`);
+      stream.markdown(`${practice.description}\n\n`);
+      stream.markdown(`✅ **Do:** ${practice.doThis.slice(0, 2).join(', ')}\n\n`);
+      stream.markdown(`❌ **Don't:** ${practice.dontDoThis.slice(0, 2).join(', ')}\n\n`);
+    }
+
+    // How it works
+    stream.markdown(`---\n\n`);
+    stream.markdown(`## 🧠 How Learning Works\n\n`);
+    stream.markdown(`1. When you build a widget and it fails, I try these patterns FIRST\n`);
+    stream.markdown(`2. If a pattern works, its confidence goes UP\n`);
+    stream.markdown(`3. If a pattern fails, its confidence goes DOWN\n`);
+    stream.markdown(`4. New successful fixes get added to the nucleus\n`);
+    stream.markdown(`5. The more you use @mendix-widget, the smarter it gets!\n\n`);
+
+    stream.markdown(`Use \`/learn\` to manually add patterns.\n`);
+
+    return {};
+  }
+
+  /**
+   * Handle /learn command - manually add knowledge to the nucleus
+   */
+  private async handleLearn(
+    request: vscode.ChatRequest,
+    stream: vscode.ChatResponseStream,
+    token: vscode.CancellationToken
+  ): Promise<vscode.ChatResult> {
+    const input = request.prompt.trim();
+
+    if (!input) {
+      stream.markdown(`# 🎓 Teach Me Something New\n\n`);
+      stream.markdown(`You can add new patterns to my nucleus! Options:\n\n`);
+      stream.markdown(`## Add an Error Fix\n`);
+      stream.markdown(`\`\`\`\n@mendix-widget /learn error: "Cannot find name 'React'" -> Add React import\n\`\`\`\n\n`);
+      stream.markdown(`## Add a Best Practice\n`);
+      stream.markdown(`\`\`\`\n@mendix-widget /learn practice: Always use optional chaining for Mendix props\n\`\`\`\n\n`);
+      stream.markdown(`## Add an SDK Pattern\n`);
+      stream.markdown(`\`\`\`\n@mendix-widget /learn api: EditableValue - always check status before accessing value\n\`\`\`\n\n`);
+      return {};
+    }
+
+    // Parse the input
+    if (input.toLowerCase().startsWith('error:')) {
+      const parts = input.substring(6).split('->').map(s => s.trim());
+      if (parts.length >= 2) {
+        const errorPattern = parts[0].replace(/^["']|["']$/g, '');
+        const fixDescription = parts[1];
+        
+        this.dynamicPatterns.learnErrorFix(
+          errorPattern,
+          fixDescription,
+          { type: 'manual', description: fixDescription },
+          true
+        );
+        
+        stream.markdown(`✅ **Learned Error Fix!**\n\n`);
+        stream.markdown(`- **Pattern:** ${errorPattern}\n`);
+        stream.markdown(`- **Fix:** ${fixDescription}\n\n`);
+        stream.markdown(`This will be tried first next time I see this error.\n`);
+      } else {
+        stream.markdown(`❌ Couldn't parse. Use format: \`error: "pattern" -> fix description\`\n`);
+      }
+    } else if (input.toLowerCase().startsWith('practice:')) {
+      const practice = input.substring(9).trim();
+      this.dynamicPatterns.learnBestPractice(
+        'general',
+        practice.substring(0, 50),
+        practice,
+        [practice],
+        []
+      );
+      
+      stream.markdown(`✅ **Learned Best Practice!**\n\n`);
+      stream.markdown(`- ${practice}\n\n`);
+    } else if (input.toLowerCase().startsWith('api:')) {
+      const parts = input.substring(4).split('-').map(s => s.trim());
+      if (parts.length >= 2) {
+        const apiName = parts[0];
+        const usage = parts.slice(1).join(' - ');
+        
+        this.dynamicPatterns.learnSdkApi(apiName, usage);
+        
+        stream.markdown(`✅ **Learned SDK API Pattern!**\n\n`);
+        stream.markdown(`- **API:** ${apiName}\n`);
+        stream.markdown(`- **Usage:** ${usage}\n\n`);
+      } else {
+        stream.markdown(`❌ Couldn't parse. Use format: \`api: ApiName - usage description\`\n`);
+      }
+    } else {
+      stream.markdown(`❓ Start with \`error:\`, \`practice:\`, or \`api:\`\n`);
+      stream.markdown(`Run \`/learn\` without arguments for examples.\n`);
+    }
 
     return {};
   }

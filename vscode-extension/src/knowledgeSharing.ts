@@ -211,15 +211,15 @@ export class KnowledgeSharing {
 
     try {
       const files = fs.readdirSync(this.knowledgeBasePath);
-      
+
       for (const file of files) {
         if (!file.endsWith('.json')) continue;
-        
+
         try {
           const filepath = path.join(this.knowledgeBasePath, file);
           const content = fs.readFileSync(filepath, 'utf-8');
           const entry: KnowledgeEntry = JSON.parse(content);
-          
+
           // Score how well this entry matches the search
           const score = this.scoreMatch(entry, searchTerms);
           if (score > 0) {
@@ -233,7 +233,7 @@ export class KnowledgeSharing {
 
       // Sort by score descending
       results.sort((a, b) => ((b as any)._score || 0) - ((a as any)._score || 0));
-      
+
       // Return top 5 matches
       return results.slice(0, 5);
     } catch {
@@ -255,22 +255,22 @@ export class KnowledgeSharing {
 
     try {
       const files = fs.readdirSync(this.knowledgeBasePath);
-      
+
       for (const file of files) {
         if (!file.startsWith('fix-') || !file.endsWith('.json')) continue;
-        
+
         try {
           const filepath = path.join(this.knowledgeBasePath, file);
           const content = fs.readFileSync(filepath, 'utf-8');
           const entry: KnowledgeEntry = JSON.parse(content);
-          
+
           // Parse the fix content
           const fixData = JSON.parse(entry.content);
           if (fixData.errorPattern && fixData.fix) {
             // Score similarity
             const patternLower = fixData.errorPattern.toLowerCase();
             let score = 0;
-            
+
             // Check for common error keywords
             const errorKeywords = patternLower.split(/\s+/);
             for (const keyword of errorKeywords) {
@@ -278,12 +278,12 @@ export class KnowledgeSharing {
                 score += 1;
               }
             }
-            
+
             if (score > 0) {
               fixes.push({
                 errorPattern: fixData.errorPattern,
                 fix: fixData.fix,
-                score
+                score,
               });
             }
           }
@@ -294,7 +294,7 @@ export class KnowledgeSharing {
 
       // Sort by score and return
       fixes.sort((a, b) => b.score - a.score);
-      return fixes.slice(0, 3).map(f => ({ errorPattern: f.errorPattern, fix: f.fix }));
+      return fixes.slice(0, 3).map((f) => ({ errorPattern: f.errorPattern, fix: f.fix }));
     } catch {
       return [];
     }
@@ -313,20 +313,20 @@ export class KnowledgeSharing {
 
     try {
       const files = fs.readdirSync(this.knowledgeBasePath);
-      
+
       for (const file of files) {
         if (!file.startsWith('successful-build-') || !file.endsWith('.json')) continue;
-        
+
         try {
           const filepath = path.join(this.knowledgeBasePath, file);
           const content = fs.readFileSync(filepath, 'utf-8');
           const entry: KnowledgeEntry = JSON.parse(content);
-          
+
           // Check tag matches
-          const tagMatches = entry.tags.filter(tag => 
-            searchTerms.some(term => tag.toLowerCase().includes(term))
+          const tagMatches = entry.tags.filter((tag) =>
+            searchTerms.some((term) => tag.toLowerCase().includes(term))
           ).length;
-          
+
           if (tagMatches > 0) {
             (entry as any)._score = tagMatches;
             results.push(entry);
@@ -355,15 +355,15 @@ export class KnowledgeSharing {
 
     try {
       const files = fs.readdirSync(this.knowledgeBasePath);
-      
+
       for (const file of files) {
         if (!file.endsWith('.json')) continue;
-        
+
         try {
           const filepath = path.join(this.knowledgeBasePath, file);
           const content = fs.readFileSync(filepath, 'utf-8');
           const entry: KnowledgeEntry = JSON.parse(content);
-          
+
           if (entry.category === category && entry.confidence === 'high') {
             results.push(entry);
           }
@@ -385,24 +385,24 @@ export class KnowledgeSharing {
     let score = 0;
     const titleLower = entry.title.toLowerCase();
     const contentLower = entry.content.toLowerCase();
-    
+
     for (const term of searchTerms) {
       if (term.length < 3) continue;
-      
+
       // Title matches are worth more
       if (titleLower.includes(term)) score += 3;
-      
+
       // Tag matches are valuable
-      if (entry.tags.some(tag => tag.includes(term))) score += 2;
-      
+      if (entry.tags.some((tag) => tag.includes(term))) score += 2;
+
       // Content matches
       if (contentLower.includes(term)) score += 1;
     }
-    
+
     // Boost high confidence entries
     if (entry.confidence === 'high') score *= 1.5;
     else if (entry.confidence === 'medium') score *= 1.2;
-    
+
     return score;
   }
 

@@ -127,7 +127,7 @@ class BeastModeResearch {
         if (localKnowledge.length > 0) {
             progressCallback?.(`✅ **Found ${localKnowledge.length} relevant entries in local knowledge!**\n\n`);
             // Check if we have a high-confidence match
-            const highConfidence = localKnowledge.find(k => k.confidence === 'high');
+            const highConfidence = localKnowledge.find((k) => k.confidence === 'high');
             if (highConfidence) {
                 progressCallback?.(`🎯 **High-confidence match found:** ${highConfidence.title}\n\n`);
                 progressCallback?.(`Using cached knowledge (faster and proven to work).\n\n`);
@@ -160,7 +160,7 @@ class BeastModeResearch {
             // Build comprehensive research prompt, including local knowledge context
             const researchPrompt = this.buildResearchPrompt(topic, localKnowledge);
             progressCallback?.(`### Searching external tiers...\n\n`);
-            for (const tier of RESEARCH_TIERS.filter(t => t.tier > 0)) {
+            for (const tier of RESEARCH_TIERS.filter((t) => t.tier > 0)) {
                 progressCallback?.(`**Tier ${tier.tier}: ${tier.name}**\n`);
                 tier.sources.forEach((s) => progressCallback?.(`  - ${s}\n`));
                 progressCallback?.(`\n`);

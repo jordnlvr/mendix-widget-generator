@@ -6,7 +6,11 @@
  * When a build fails, this doesn't give up - it researches the error,
  * applies fixes, and tries again.
  *
- * NOW WITH LEARNING: Checks local knowledge for known fixes FIRST!
+ * NOW WITH LEARNING:
+ * 1. Checks DYNAMIC PATTERNS first (the nucleus - evolves over time!)
+ * 2. Then checks knowledge base for known fixes
+ * 3. Finally does pattern matching and AI research
+ * 4. Successful fixes get LEARNED back into the nucleus!
  */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -46,19 +50,27 @@ exports.BuildLoop = void 0;
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 const vscode = __importStar(require("vscode"));
+const dynamicPatterns_1 = require("./dynamicPatterns");
 const knowledgeSharing_1 = require("./knowledgeSharing");
 class BuildLoop {
     generator;
     research;
     knowledgeSharing;
+    dynamicPatterns;
     constructor(generator, research) {
         this.generator = generator;
         this.research = research;
         this.knowledgeSharing = new knowledgeSharing_1.KnowledgeSharing();
+        this.dynamicPatterns = new dynamicPatterns_1.DynamicPatterns();
     }
     /**
      * Execute the full build loop with automatic error fixing
-     * NOW CHECKS LOCAL KNOWLEDGE FOR KNOWN FIXES FIRST!
+     *
+     * Fix Priority:
+     * 1. Dynamic Patterns (the nucleus - learned patterns with high confidence)
+     * 2. Knowledge Base (broader learned knowledge)
+     * 3. Pattern Matching (hardcoded patterns)
+     * 4. AI Research (external knowledge)
      */
     async execute(config, options, progressCallback, token) {
         const maxAttempts = options.maxAttempts || 3;
@@ -144,11 +156,44 @@ class BuildLoop {
     }
     /**
      * Analyze errors and apply automatic fixes
-     * NOW WITH LEARNING: Checks known fixes FIRST before pattern matching or AI research!
+     *
+     * Fix Priority Order (THE LEARNING HIERARCHY):
+     * 0. DYNAMIC PATTERNS (the nucleus - high-confidence learned patterns)
+     * 1. Knowledge Base (broader learned knowledge)
+     * 2. Pattern Matching (hardcoded fallback patterns)
+     * 3. AI Research (external knowledge)
+     *
+     * Successful fixes get LEARNED back into the nucleus!
      */
     async analyzeAndFix(errors, config, widgetPath, progressCallback) {
         const errorText = errors.join('\n');
-        // 1. FIRST: Check local knowledge for known fixes (LEARNED PATTERNS!)
+        // 0. THE NUCLEUS: Check dynamic patterns first (high-confidence learned patterns)
+        progressCallback(`🔮 Checking NUCLEUS (dynamic patterns)...\n`);
+        const nucleusPatterns = this.dynamicPatterns.getMatchingErrorFixes(errorText);
+        if (nucleusPatterns.length > 0) {
+            progressCallback(`💎 Found ${nucleusPatterns.length} pattern(s) in nucleus!\n`);
+            for (const pattern of nucleusPatterns) {
+                if (pattern.confidence >= 0.7) {
+                    progressCallback(`  🎯 Trying "${pattern.fix.description}" (confidence: ${(pattern.confidence * 100).toFixed(0)}%)\n`);
+                    const applied = await this.applyNucleusFix(pattern, widgetPath, progressCallback);
+                    if (applied) {
+                        // Record success - pattern gets even more confident!
+                        this.dynamicPatterns.recordFixUsage(pattern.id, true);
+                        progressCallback(`✅ NUCLEUS fix applied successfully!\n`);
+                        return {
+                            applied: true,
+                            description: `[NUCLEUS] ${pattern.fix.description}`,
+                        };
+                    }
+                    else {
+                        // Record failure - pattern confidence decreases
+                        this.dynamicPatterns.recordFixUsage(pattern.id, false);
+                    }
+                }
+            }
+            progressCallback(`⚠️ Nucleus patterns didn't apply, checking knowledge base...\n`);
+        }
+        // 1. Check local knowledge for known fixes (LEARNED PATTERNS!)
         progressCallback(`🧠 Checking learned fixes from knowledge base...\n`);
         const knownFixes = this.knowledgeSharing.getKnownFixes(errorText);
         if (knownFixes.length > 0) {
@@ -158,10 +203,12 @@ class BuildLoop {
                 progressCallback(`  Trying fix for pattern: "${knownFix.errorPattern.substring(0, 50)}..."\n`);
                 const applied = await this.applyKnownFix(knownFix.fix, widgetPath, progressCallback);
                 if (applied) {
+                    // LEARN THIS INTO THE NUCLEUS for next time!
+                    this.dynamicPatterns.learnErrorFix(knownFix.errorPattern, knownFix.fix, { type: 'manual', description: knownFix.fix }, true);
                     progressCallback(`✅ Applied known fix from learned patterns!\n`);
                     return {
                         applied: true,
-                        description: `[LEARNED] ${knownFix.fix.substring(0, 100)}`
+                        description: `[LEARNED] ${knownFix.fix.substring(0, 100)}`,
                     };
                 }
             }
@@ -175,6 +222,8 @@ class BuildLoop {
         if (patternFix.applied) {
             // Save this fix to knowledge base for future use!
             this.knowledgeSharing.saveWorkingFix(errorText, patternFix.description, 'success');
+            // ALSO learn into nucleus!
+            this.dynamicPatterns.learnErrorFix(errorText.substring(0, 200), patternFix.description, { type: 'manual', description: patternFix.description }, true);
             return patternFix;
         }
         // 3. AI-powered fix research (last resort)
@@ -407,6 +456,92 @@ Be specific. Provide exact text to search for and replace.`;
         }
         catch (error) {
             progressCallback(`  ⚠️ Error applying known fix: ${error}\n`);
+            return false;
+        }
+    }
+    /**
+     * Apply a fix from the dynamic patterns NUCLEUS
+     * These are high-confidence patterns that have been learned and refined
+     */
+    async applyNucleusFix(pattern, widgetPath, progressCallback) {
+        try {
+            const fix = pattern.fix;
+            switch (fix.type) {
+                case 'file-edit':
+                    if (fix.file && fix.search !== undefined && fix.replace !== undefined) {
+                        // Find matching files
+                        const srcPath = path.join(widgetPath, 'src');
+                        if (!fs.existsSync(srcPath)) {
+                            return false;
+                        }
+                        const files = fs.readdirSync(srcPath);
+                        let applied = false;
+                        for (const file of files) {
+                            // Check if file matches pattern (e.g., "*.tsx" or "Widget.tsx")
+                            if (fix.file.includes('*')) {
+                                const ext = fix.file.replace('*', '');
+                                if (!file.endsWith(ext.replace('src/', ''))) {
+                                    continue;
+                                }
+                            }
+                            else if (!fix.file.includes(file)) {
+                                continue;
+                            }
+                            const filePath = path.join(srcPath, file);
+                            let content = fs.readFileSync(filePath, 'utf8');
+                            // For prepend operations (when search is empty)
+                            if (fix.search === '' && fix.replace) {
+                                if (!content.includes(fix.replace)) {
+                                    content = fix.replace + content;
+                                    fs.writeFileSync(filePath, content);
+                                    progressCallback(`  📝 Added to ${file}\n`);
+                                    applied = true;
+                                }
+                            }
+                            // For search and replace
+                            else if (fix.search && content.includes(fix.search)) {
+                                content = content.replace(fix.search, fix.replace);
+                                fs.writeFileSync(filePath, content);
+                                progressCallback(`  📝 Modified ${file}\n`);
+                                applied = true;
+                            }
+                        }
+                        return applied;
+                    }
+                    break;
+                case 'config-change':
+                    if (fix.file === 'package.json') {
+                        const pkgPath = path.join(widgetPath, 'package.json');
+                        if (fs.existsSync(pkgPath)) {
+                            const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+                            // Add missing scripts
+                            pkg.scripts = pkg.scripts || {};
+                            if (!pkg.scripts.build) {
+                                pkg.scripts.build = 'pluggable-widgets-tools build:web';
+                            }
+                            if (!pkg.scripts.dev) {
+                                pkg.scripts.dev = 'pluggable-widgets-tools start:web';
+                            }
+                            fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
+                            progressCallback(`  📝 Updated package.json\n`);
+                            return true;
+                        }
+                    }
+                    break;
+                case 'dependency-add':
+                    if (fix.commands && fix.commands.length > 0) {
+                        progressCallback(`  ℹ️ Requires running: ${fix.commands.join(', ')}\n`);
+                        // Could potentially run these, but safer to let user do it
+                    }
+                    break;
+                case 'manual':
+                    progressCallback(`  ℹ️ Manual fix needed: ${fix.description}\n`);
+                    break;
+            }
+            return false;
+        }
+        catch (error) {
+            progressCallback(`  ⚠️ Error applying nucleus fix: ${error}\n`);
             return false;
         }
     }

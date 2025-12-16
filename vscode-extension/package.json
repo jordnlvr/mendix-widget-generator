@@ -1,8 +1,8 @@
 {
   "name": "mendix-widget-agent",
   "displayName": "Mendix Widget Agent",
-  "description": "AI-powered Mendix Pluggable Widget generator with natural language interface - Now with self-learning!",
-  "version": "1.2.0",
+  "description": "AI-powered Mendix Pluggable Widget generator with natural language interface - Now with self-learning nucleus!",
+  "version": "1.3.0",
   "publisher": "jordnlvr",
   "repository": {
     "type": "git",
@@ -64,6 +64,14 @@
           {
             "name": "status",
             "description": "Show version, knowledge base status, and check for updates"
+          },
+          {
+            "name": "patterns",
+            "description": "Show the nucleus - learned patterns that improve over time"
+          },
+          {
+            "name": "learn",
+            "description": "Manually teach new patterns to the nucleus"
           }
         ]
       }

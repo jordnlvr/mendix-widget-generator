@@ -261,7 +261,7 @@ class KnowledgeSharing {
                             fixes.push({
                                 errorPattern: fixData.errorPattern,
                                 fix: fixData.fix,
-                                score
+                                score,
                             });
                         }
                     }
@@ -272,7 +272,7 @@ class KnowledgeSharing {
             }
             // Sort by score and return
             fixes.sort((a, b) => b.score - a.score);
-            return fixes.slice(0, 3).map(f => ({ errorPattern: f.errorPattern, fix: f.fix }));
+            return fixes.slice(0, 3).map((f) => ({ errorPattern: f.errorPattern, fix: f.fix }));
         }
         catch {
             return [];
@@ -297,7 +297,7 @@ class KnowledgeSharing {
                     const content = fs.readFileSync(filepath, 'utf-8');
                     const entry = JSON.parse(content);
                     // Check tag matches
-                    const tagMatches = entry.tags.filter(tag => searchTerms.some(term => tag.toLowerCase().includes(term))).length;
+                    const tagMatches = entry.tags.filter((tag) => searchTerms.some((term) => tag.toLowerCase().includes(term))).length;
                     if (tagMatches > 0) {
                         entry._score = tagMatches;
                         results.push(entry);
@@ -359,7 +359,7 @@ class KnowledgeSharing {
             if (titleLower.includes(term))
                 score += 3;
             // Tag matches are valuable
-            if (entry.tags.some(tag => tag.includes(term)))
+            if (entry.tags.some((tag) => tag.includes(term)))
                 score += 2;
             // Content matches
             if (contentLower.includes(term))

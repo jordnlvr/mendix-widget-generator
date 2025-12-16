@@ -8,11 +8,13 @@ community a harassment-free experience for everyone.
 ## Our Standards
 
 **Positive behavior includes:**
+
 - Being respectful and inclusive
 - Accepting constructive criticism gracefully
 - Focusing on what is best for the community
 
 **Unacceptable behavior includes:**
+
 - Harassment, trolling, or personal attacks
 - Publishing others' private information
 - Other conduct which could reasonably be considered inappropriate

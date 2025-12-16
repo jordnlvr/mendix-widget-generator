@@ -1,54 +1,101 @@
 # Mendix Pluggable Widget Generator 🧙
 
-**Grade: A+** | **5/5 Tests Passing** | **Zero Config to Deploy**
+[![GitHub release](https://img.shields.io/github/v/release/jordnlvr/mendix-widget-generator?style=flat-square)](https://github.com/jordnlvr/mendix-widget-generator/releases)
+[![npm version](https://img.shields.io/npm/v/create-mendix-widget?style=flat-square&color=cb3837)](https://www.npmjs.com/package/create-mendix-widget)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+[![Tests](https://img.shields.io/badge/tests-5%2F5%20passing-brightgreen?style=flat-square)](https://github.com/jordnlvr/mendix-widget-generator/actions)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![Mendix](https://img.shields.io/badge/Mendix-10%2B%20%7C%2011%2B-0595DB?style=flat-square)](https://mendix.com)
 
-A complete, enterprise-grade widget generator that takes you from idea to deployed widget in seconds.
+> **Zero to deployed widget in 60 seconds.** The fastest way to create Mendix pluggable widgets.
+
+<p align="center">
+  <img src="docs/assets/demo.gif" alt="Widget Generator Demo" width="600">
+</p>
+
+## ⚡ Why Use This?
+
+| Before                           | After                |
+| -------------------------------- | -------------------- |
+| 😫 Manual boilerplate            | 🚀 One command       |
+| 🐛 Trial-and-error debugging     | ✅ Works first time  |
+| 📚 Read docs for property syntax | 🧙 Wizard guides you |
+| ⏱️ Hours of setup                | ⚡ 60 seconds        |
 
 ## 🚀 Quick Start
 
-### Option 1: Interactive Wizard (Recommended)
+### Option 1: npm/npx (Cross-Platform) ⭐ NEW
+
+```bash
+# Interactive wizard
+npx create-mendix-widget
+
+# Use a template
+npx create-mendix-widget --template status-badge
+
+# See all templates
+npx create-mendix-widget --list-templates
+
+# From JSON config
+npx create-mendix-widget --config my-widget.json
+```
+
+### Option 2: Web UI 🌐 NEW
+
+Open `web/index.html` in your browser for a visual widget configurator!
+
+- 📦 Quick-start templates (Status Badge, Data Card, Text Input, etc.)
+- ⚙️ Add properties and events visually
+- 📄 Live JSON/XML preview
+- 💾 Download or copy config
+
+### Option 3: PowerShell (Windows)
 
 ```powershell
+# Interactive wizard
 .\New-Widget.ps1
-```
 
-Answer the questions, and get a working widget deployed to your test project.
-
-### Option 2: Config File
-
-```powershell
+# From JSON config
 .\Generate-WidgetFromConfig.ps1 -ConfigPath "widget-configs\my-widget.json"
-```
 
-### Option 3: Template-Based
-
-```powershell
+# Template-based
 .\Generate-Widget.ps1 -Name "MyWidget"
 ```
 
 ## ✨ Features
 
-| Feature                | Status | Description                                                             |
-| ---------------------- | ------ | ----------------------------------------------------------------------- |
-| **Auto-Build**         | ✅     | Runs `npm install` and `npm run build` automatically                    |
-| **Auto-Deploy**        | ✅     | Copies MPK to test project on success                                   |
-| **Auto-Cleanup**       | ✅     | Renames failed widgets with timestamp for debugging                     |
-| **Intake Wizard**      | ✅     | Interactive CLI for widget configuration                                |
-| **Config-Driven**      | ✅     | JSON config file support                                                |
-| **All Property Types** | ✅     | String, boolean, enum, expression, attribute, datasource, widgets, etc. |
-| **VS Code Snippets**   | ✅     | Quick-add property types with `mx-prop-*`                               |
-| **Test Suite**         | ✅     | 5/5 widget types passing                                                |
+| Feature                   | Status | Description                                                  |
+| ------------------------- | ------ | ------------------------------------------------------------ |
+| **npm/npx Support**       | ✅ NEW | `npx create-mendix-widget` - works everywhere                |
+| **Web UI**                | ✅ NEW | Visual config builder with live preview                      |
+| **10 Built-in Templates** | ✅ NEW | StatusBadge, DataCard, TextInput, ProgressBar, Rating & more |
+| **Auto-Build**            | ✅     | Runs `npm install` and `npm run build` automatically         |
+| **Auto-Deploy**           | ✅     | Copies MPK to test project on success                        |
+| **Auto-Cleanup**          | ✅     | Renames failed widgets with timestamp for debugging          |
+| **Intake Wizard**         | ✅     | Interactive CLI for widget configuration                     |
+| **Config-Driven**         | ✅     | JSON config file support                                     |
+| **All Property Types**    | ✅     | String, boolean, enum, expression, attribute, datasource...  |
+| **VS Code Snippets**      | ✅     | Quick-add property types with `mx-prop-*`                    |
+| **Test Suite**            | ✅     | 5/5 widget types passing                                     |
 
-## 📁 Files
+## 📦 Built-in Templates
 
-| File                                  | Purpose                              |
-| ------------------------------------- | ------------------------------------ |
-| `New-Widget.ps1`                      | Interactive wizard - the easiest way |
-| `Generate-WidgetFromConfig.ps1`       | JSON config-driven generator         |
-| `Generate-Widget.ps1`                 | Simple template-based generator      |
-| `Test-Generator.ps1`                  | End-to-end test suite                |
-| `widget-config-schema.json`           | JSON schema for configs              |
-| `.vscode/mendix-widget.code-snippets` | VS Code snippets                     |
+```
+npx create-mendix-widget --list-templates
+
+📦 Available Widget Templates
+
+  status-badge      Displays a colored status indicator with label
+  data-card         Card component that repeats for each item
+  text-input        Custom text input with validation
+  progress-bar      Visual progress indicator
+  icon-button       Button with icon and optional label
+  tabs              Tabbed content container
+  modal-trigger     Button that opens a modal popup
+  file-upload       Drag-and-drop file uploader
+  countdown         Countdown to a target date/time
+  rating            Interactive star rating component
+```
 
 ## 📝 JSON Config Format
 

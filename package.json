@@ -1,0 +1,48 @@
+{
+  "name": "create-mendix-widget",
+  "version": "2.0.0",
+  "description": "🧙 The fastest way to create Mendix pluggable widgets. Zero to deployed in 60 seconds.",
+  "keywords": [
+    "mendix",
+    "widget",
+    "pluggable-widget",
+    "generator",
+    "scaffold",
+    "cli",
+    "low-code"
+  ],
+  "homepage": "https://github.com/jordnlvr/mendix-widget-generator#readme",
+  "bugs": {
+    "url": "https://github.com/jordnlvr/mendix-widget-generator/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jordnlvr/mendix-widget-generator.git"
+  },
+  "license": "MIT",
+  "author": "Kelly Seale",
+  "type": "module",
+  "bin": {
+    "create-mendix-widget": "./cli/index.js",
+    "cmw": "./cli/index.js"
+  },
+  "files": [
+    "cli/",
+    "templates/",
+    "widget-configs/"
+  ],
+  "scripts": {
+    "start": "node cli/index.js",
+    "test": "node cli/test.js"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^12.0.0",
+    "enquirer": "^2.4.1",
+    "ora": "^8.0.1",
+    "fs-extra": "^11.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

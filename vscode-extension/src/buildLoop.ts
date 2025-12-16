@@ -5,7 +5,7 @@
  * When a build fails, this doesn't give up - it researches the error,
  * applies fixes, and tries again.
  *
- * NOW WITH LEARNING: 
+ * NOW WITH LEARNING:
  * 1. Checks DYNAMIC PATTERNS first (the nucleus - evolves over time!)
  * 2. Then checks knowledge base for known fixes
  * 3. Finally does pattern matching and AI research
@@ -47,7 +47,7 @@ export class BuildLoop {
 
   /**
    * Execute the full build loop with automatic error fixing
-   * 
+   *
    * Fix Priority:
    * 1. Dynamic Patterns (the nucleus - learned patterns with high confidence)
    * 2. Knowledge Base (broader learned knowledge)
@@ -165,13 +165,13 @@ export class BuildLoop {
 
   /**
    * Analyze errors and apply automatic fixes
-   * 
+   *
    * Fix Priority Order (THE LEARNING HIERARCHY):
    * 0. DYNAMIC PATTERNS (the nucleus - high-confidence learned patterns)
    * 1. Knowledge Base (broader learned knowledge)
    * 2. Pattern Matching (hardcoded fallback patterns)
    * 3. AI Research (external knowledge)
-   * 
+   *
    * Successful fixes get LEARNED back into the nucleus!
    */
   private async analyzeAndFix(
@@ -185,14 +185,18 @@ export class BuildLoop {
     // 0. THE NUCLEUS: Check dynamic patterns first (high-confidence learned patterns)
     progressCallback(`🔮 Checking NUCLEUS (dynamic patterns)...\n`);
     const nucleusPatterns = this.dynamicPatterns.getMatchingErrorFixes(errorText);
-    
+
     if (nucleusPatterns.length > 0) {
       progressCallback(`💎 Found ${nucleusPatterns.length} pattern(s) in nucleus!\n`);
-      
+
       for (const pattern of nucleusPatterns) {
         if (pattern.confidence >= 0.7) {
-          progressCallback(`  🎯 Trying "${pattern.fix.description}" (confidence: ${(pattern.confidence * 100).toFixed(0)}%)\n`);
-          
+          progressCallback(
+            `  🎯 Trying "${pattern.fix.description}" (confidence: ${(
+              pattern.confidence * 100
+            ).toFixed(0)}%)\n`
+          );
+
           const applied = await this.applyNucleusFix(pattern, widgetPath, progressCallback);
           if (applied) {
             // Record success - pattern gets even more confident!
@@ -262,7 +266,9 @@ export class BuildLoop {
 
     // 3. AI-powered fix research (last resort)
     try {
-      const [model] = await vscode.lm.selectChatModels({ family: 'gpt-4' });
+      // Use any available model (works with GPT-4, Claude, etc.)
+      const models = await vscode.lm.selectChatModels({});
+      const model = models[0];
 
       if (!model) {
         return { applied: false, description: 'No AI model available for analysis' };
@@ -602,7 +608,7 @@ Be specific. Provide exact text to search for and replace.`;
             const pkgPath = path.join(widgetPath, 'package.json');
             if (fs.existsSync(pkgPath)) {
               const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-              
+
               // Add missing scripts
               pkg.scripts = pkg.scripts || {};
               if (!pkg.scripts.build) {
@@ -611,7 +617,7 @@ Be specific. Provide exact text to search for and replace.`;
               if (!pkg.scripts.dev) {
                 pkg.scripts.dev = 'pluggable-widgets-tools start:web';
               }
-              
+
               fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
               progressCallback(`  📝 Updated package.json\n`);
               return true;

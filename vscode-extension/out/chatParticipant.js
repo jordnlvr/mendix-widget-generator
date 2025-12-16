@@ -134,8 +134,9 @@ class MendixWidgetChatParticipant {
         stream.markdown(`Let me analyze your requirements...\n\n`);
         const analysisPrompt = this.buildAnalysisPrompt(userPrompt);
         try {
-            // Get AI analysis
-            const [model] = await vscode.lm.selectChatModels({ family: 'gpt-4' });
+            // Get AI analysis - use any available model (works with GPT-4, Claude, etc.)
+            const models = await vscode.lm.selectChatModels({});
+            const model = models[0];
             if (!model) {
                 stream.markdown(`⚠️ No AI model available. Using template-based generation.\n\n`);
                 return await this.fallbackToTemplateSelection(stream);
@@ -721,7 +722,10 @@ Be intelligent:
         }
         // Parse the input
         if (input.toLowerCase().startsWith('error:')) {
-            const parts = input.substring(6).split('->').map(s => s.trim());
+            const parts = input
+                .substring(6)
+                .split('->')
+                .map((s) => s.trim());
             if (parts.length >= 2) {
                 const errorPattern = parts[0].replace(/^["']|["']$/g, '');
                 const fixDescription = parts[1];
@@ -742,7 +746,10 @@ Be intelligent:
             stream.markdown(`- ${practice}\n\n`);
         }
         else if (input.toLowerCase().startsWith('api:')) {
-            const parts = input.substring(4).split('-').map(s => s.trim());
+            const parts = input
+                .substring(4)
+                .split('-')
+                .map((s) => s.trim());
             if (parts.length >= 2) {
                 const apiName = parts[0];
                 const usage = parts.slice(1).join(' - ');

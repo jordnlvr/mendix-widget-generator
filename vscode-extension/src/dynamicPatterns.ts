@@ -126,7 +126,9 @@ export class DynamicPatterns {
     }
 
     // Fallback to extension's own folder
-    const extensionPath = vscode.extensions.getExtension('jordnlvr.mendix-widget-agent')?.extensionPath;
+    const extensionPath = vscode.extensions.getExtension(
+      'jordnlvr.mendix-widget-agent'
+    )?.extensionPath;
     if (extensionPath) {
       return path.join(extensionPath, 'dynamic-patterns.json');
     }
@@ -140,7 +142,9 @@ export class DynamicPatterns {
       try {
         const content = fs.readFileSync(this.patternsPath, 'utf8');
         const data = JSON.parse(content) as DynamicPatternsData;
-        console.log(`[DynamicPatterns] Loaded ${data.errorFixes.length} error fixes, ${data.widgetTemplates.length} templates`);
+        console.log(
+          `[DynamicPatterns] Loaded ${data.errorFixes.length} error fixes, ${data.widgetTemplates.length} templates`
+        );
         return data;
       } catch (error) {
         console.error('[DynamicPatterns] Failed to load patterns:', error);
@@ -210,7 +214,8 @@ export class DynamicPatterns {
           errorKeywords: ['possibly', 'undefined', 'null'],
           fix: {
             type: 'manual',
-            description: 'Add null safety checks - use optional chaining (?.) or nullish coalescing (??)',
+            description:
+              'Add null safety checks - use optional chaining (?.) or nullish coalescing (??)',
           },
           confidence: 0.7,
           successCount: 3,
@@ -325,7 +330,11 @@ if (props.dataSource?.status === ValueStatus.Available) {
           category: 'typescript',
           title: 'Always Use Null Safety',
           description: 'Mendix widget props can be undefined during loading states',
-          doThis: ['Use optional chaining (?.)', 'Use nullish coalescing (??)', 'Check ValueStatus'],
+          doThis: [
+            'Use optional chaining (?.)',
+            'Use nullish coalescing (??)',
+            'Check ValueStatus',
+          ],
           dontDoThis: [
             'Assume props are always defined',
             'Use non-null assertion (!) without checks',
@@ -417,7 +426,10 @@ const value = props.attr!.value;`,
 
       // Check example matches
       for (const example of pattern.examples) {
-        if (descLower.includes(example.toLowerCase()) || example.toLowerCase().includes(descLower)) {
+        if (
+          descLower.includes(example.toLowerCase()) ||
+          example.toLowerCase().includes(descLower)
+        ) {
           score += 5;
         }
       }

@@ -228,7 +228,9 @@ class BuildLoop {
         }
         // 3. AI-powered fix research (last resort)
         try {
-            const [model] = await vscode.lm.selectChatModels({ family: 'gpt-4' });
+            // Use any available model (works with GPT-4, Claude, etc.)
+            const models = await vscode.lm.selectChatModels({});
+            const model = models[0];
             if (!model) {
                 return { applied: false, description: 'No AI model available for analysis' };
             }

@@ -273,7 +273,11 @@ if (props.dataSource?.status === ValueStatus.Available) {
                     category: 'typescript',
                     title: 'Always Use Null Safety',
                     description: 'Mendix widget props can be undefined during loading states',
-                    doThis: ['Use optional chaining (?.)', 'Use nullish coalescing (??)', 'Check ValueStatus'],
+                    doThis: [
+                        'Use optional chaining (?.)',
+                        'Use nullish coalescing (??)',
+                        'Check ValueStatus',
+                    ],
                     dontDoThis: [
                         'Assume props are always defined',
                         'Use non-null assertion (!) without checks',
@@ -354,7 +358,8 @@ const value = props.attr!.value;`,
             }
             // Check example matches
             for (const example of pattern.examples) {
-                if (descLower.includes(example.toLowerCase()) || example.toLowerCase().includes(descLower)) {
+                if (descLower.includes(example.toLowerCase()) ||
+                    example.toLowerCase().includes(descLower)) {
                     score += 5;
                 }
             }

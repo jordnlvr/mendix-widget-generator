@@ -4,7 +4,7 @@
  * Handles all @mendix-widget chat interactions with AI-driven responses.
  * This is the brain of the operation - understanding natural language,
  * asking smart questions, and orchestrating widget creation.
- * 
+ *
  * NOW WITH DYNAMIC PATTERNS: The nucleus that evolves as you build widgets!
  */
 
@@ -160,8 +160,9 @@ export class MendixWidgetChatParticipant {
     const analysisPrompt = this.buildAnalysisPrompt(userPrompt);
 
     try {
-      // Get AI analysis
-      const [model] = await vscode.lm.selectChatModels({ family: 'gpt-4' });
+      // Get AI analysis - use any available model (works with GPT-4, Claude, etc.)
+      const models = await vscode.lm.selectChatModels({});
+      const model = models[0];
       if (!model) {
         stream.markdown(`⚠️ No AI model available. Using template-based generation.\n\n`);
         return await this.fallbackToTemplateSelection(stream);
@@ -848,7 +849,9 @@ Be intelligent:
     token: vscode.CancellationToken
   ): Promise<vscode.ChatResult> {
     stream.markdown(`# 🔮 The Nucleus - Dynamic Patterns\n\n`);
-    stream.markdown(`These are the patterns I've learned from building widgets. They get better over time!\n\n`);
+    stream.markdown(
+      `These are the patterns I've learned from building widgets. They get better over time!\n\n`
+    );
 
     const stats = this.dynamicPatterns.getStats();
 
@@ -860,7 +863,9 @@ Be intelligent:
     stream.markdown(`| Widget Templates | ${stats.templates} | - |\n`);
     stream.markdown(`| SDK API Patterns | ${stats.sdkApis} | - |\n`);
     stream.markdown(`| Best Practices | ${stats.bestPractices} | - |\n`);
-    stream.markdown(`| **Total** | **${stats.totalPatterns}** | **${stats.learnedPatterns}** |\n\n`);
+    stream.markdown(
+      `| **Total** | **${stats.totalPatterns}** | **${stats.learnedPatterns}** |\n\n`
+    );
 
     // Error Fixes
     stream.markdown(`## 🔧 Error Fix Patterns\n\n`);
@@ -868,13 +873,16 @@ Be intelligent:
     if (errorFixes.length > 0) {
       for (const fix of errorFixes.slice(0, 5)) {
         const confidence = (fix.confidence * 100).toFixed(0);
-        const successRate = fix.successCount + fix.failureCount > 0 
-          ? ((fix.successCount / (fix.successCount + fix.failureCount)) * 100).toFixed(0)
-          : 'N/A';
+        const successRate =
+          fix.successCount + fix.failureCount > 0
+            ? ((fix.successCount / (fix.successCount + fix.failureCount)) * 100).toFixed(0)
+            : 'N/A';
         stream.markdown(`### ${fix.fix.description}\n`);
         stream.markdown(`- **Pattern:** \`${fix.errorPattern.substring(0, 60)}...\`\n`);
         stream.markdown(`- **Confidence:** ${confidence}%\n`);
-        stream.markdown(`- **Success Rate:** ${successRate}% (${fix.successCount} successes, ${fix.failureCount} failures)\n`);
+        stream.markdown(
+          `- **Success Rate:** ${successRate}% (${fix.successCount} successes, ${fix.failureCount} failures)\n`
+        );
         stream.markdown(`- **Source:** ${fix.source}\n\n`);
       }
       if (errorFixes.length > 5) {
@@ -922,28 +930,37 @@ Be intelligent:
       stream.markdown(`# 🎓 Teach Me Something New\n\n`);
       stream.markdown(`You can add new patterns to my nucleus! Options:\n\n`);
       stream.markdown(`## Add an Error Fix\n`);
-      stream.markdown(`\`\`\`\n@mendix-widget /learn error: "Cannot find name 'React'" -> Add React import\n\`\`\`\n\n`);
+      stream.markdown(
+        `\`\`\`\n@mendix-widget /learn error: "Cannot find name 'React'" -> Add React import\n\`\`\`\n\n`
+      );
       stream.markdown(`## Add a Best Practice\n`);
-      stream.markdown(`\`\`\`\n@mendix-widget /learn practice: Always use optional chaining for Mendix props\n\`\`\`\n\n`);
+      stream.markdown(
+        `\`\`\`\n@mendix-widget /learn practice: Always use optional chaining for Mendix props\n\`\`\`\n\n`
+      );
       stream.markdown(`## Add an SDK Pattern\n`);
-      stream.markdown(`\`\`\`\n@mendix-widget /learn api: EditableValue - always check status before accessing value\n\`\`\`\n\n`);
+      stream.markdown(
+        `\`\`\`\n@mendix-widget /learn api: EditableValue - always check status before accessing value\n\`\`\`\n\n`
+      );
       return {};
     }
 
     // Parse the input
     if (input.toLowerCase().startsWith('error:')) {
-      const parts = input.substring(6).split('->').map(s => s.trim());
+      const parts = input
+        .substring(6)
+        .split('->')
+        .map((s) => s.trim());
       if (parts.length >= 2) {
         const errorPattern = parts[0].replace(/^["']|["']$/g, '');
         const fixDescription = parts[1];
-        
+
         this.dynamicPatterns.learnErrorFix(
           errorPattern,
           fixDescription,
           { type: 'manual', description: fixDescription },
           true
         );
-        
+
         stream.markdown(`✅ **Learned Error Fix!**\n\n`);
         stream.markdown(`- **Pattern:** ${errorPattern}\n`);
         stream.markdown(`- **Fix:** ${fixDescription}\n\n`);
@@ -960,17 +977,20 @@ Be intelligent:
         [practice],
         []
       );
-      
+
       stream.markdown(`✅ **Learned Best Practice!**\n\n`);
       stream.markdown(`- ${practice}\n\n`);
     } else if (input.toLowerCase().startsWith('api:')) {
-      const parts = input.substring(4).split('-').map(s => s.trim());
+      const parts = input
+        .substring(4)
+        .split('-')
+        .map((s) => s.trim());
       if (parts.length >= 2) {
         const apiName = parts[0];
         const usage = parts.slice(1).join(' - ');
-        
+
         this.dynamicPatterns.learnSdkApi(apiName, usage);
-        
+
         stream.markdown(`✅ **Learned SDK API Pattern!**\n\n`);
         stream.markdown(`- **API:** ${apiName}\n`);
         stream.markdown(`- **Usage:** ${usage}\n\n`);

@@ -1,498 +1,535 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mendix Widget Generator - Zero to Widget in 60 Seconds</title>
-    <meta name="description" content="The fastest way to create Mendix pluggable widgets. Interactive wizard, 10+ templates, cross-platform CLI.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #0595db;
-            --primary-dark: #0477b2;
-            --secondary: #264ae5;
-            --accent: #10b981;
-            --bg: #0a0a0a;
-            --bg-card: #18181b;
-            --text: #fafafa;
-            --text-muted: #a1a1aa;
-            --border: #27272a;
-        }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        html {
-            scroll-behavior: smooth;
-        }
-        
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.7;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-        
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            padding: 4rem 2rem;
-        }
-        
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 1000px;
-            height: 1000px;
-            background: radial-gradient(circle, rgba(5, 149, 219, 0.15) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        
-        .hero-badge {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 999px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
-        }
-        
-        .hero h1 {
-            font-size: clamp(3rem, 8vw, 5rem);
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-        }
-        
-        .hero h1 span {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .hero p {
-            font-size: 1.25rem;
-            color: var(--text-muted);
-            max-width: 600px;
-            margin-bottom: 2.5rem;
-        }
-        
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 40px rgba(5, 149, 219, 0.4);
-        }
-        
-        .btn-secondary {
-            background: var(--bg-card);
-            color: var(--text);
-            border: 1px solid var(--border);
-        }
-        
-        .btn-secondary:hover {
-            border-color: var(--primary);
-        }
-        
-        /* Install Command */
-        .install-cmd {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1rem 2rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-top: 3rem;
-            font-family: 'JetBrains Mono', monospace;
-        }
-        
-        .install-cmd code {
-            color: var(--accent);
-        }
-        
-        .install-cmd button {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            padding: 0.5rem;
-            transition: color 0.2s;
-        }
-        
-        .install-cmd button:hover {
-            color: var(--primary);
-        }
-        
-        /* Features Section */
-        .features {
-            padding: 6rem 0;
-        }
-        
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-        
-        .section-subtitle {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 1.125rem;
-            margin-bottom: 4rem;
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-        
-        .feature-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
-            transition: all 0.3s;
-        }
-        
-        .feature-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-4px);
-        }
-        
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .feature-card h3 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-        }
-        
-        .feature-card p {
-            color: var(--text-muted);
-        }
-        
-        /* Templates Section */
-        .templates {
-            padding: 6rem 0;
-            background: linear-gradient(180deg, transparent, rgba(5, 149, 219, 0.05), transparent);
-        }
-        
-        .templates-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        
-        .template-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-            transition: all 0.3s;
-        }
-        
-        .template-card:hover {
-            border-color: var(--primary);
-            transform: scale(1.03);
-        }
-        
-        .template-icon {
-            font-size: 2rem;
-            margin-bottom: 0.75rem;
-        }
-        
-        .template-card h4 {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-        
-        .template-card p {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-        }
-        
-        /* Code Examples */
-        .code-section {
-            padding: 6rem 0;
-        }
-        
-        .code-tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .code-tab {
-            padding: 0.75rem 1.5rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 8px 8px 0 0;
-            border-bottom: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.875rem;
-            transition: all 0.2s;
-        }
-        
-        .code-tab.active {
-            color: var(--primary);
-            background: var(--bg);
-        }
-        
-        .code-block {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 0 12px 12px 12px;
-            padding: 2rem;
-            overflow-x: auto;
-        }
-        
-        .code-block pre {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            line-height: 1.8;
-        }
-        
-        .code-block .comment { color: #6a737d; }
-        .code-block .command { color: var(--accent); }
-        .code-block .flag { color: #f97316; }
-        
-        /* Footer */
-        footer {
-            padding: 4rem 0;
-            border-top: 1px solid var(--border);
-            text-align: center;
-        }
-        
-        footer p {
-            color: var(--text-muted);
-        }
-        
-        footer a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-        
-        footer a:hover {
-            text-decoration: underline;
-        }
-        
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .hero > * {
-            animation: fadeInUp 0.6s ease-out backwards;
-        }
-        
-        .hero-badge { animation-delay: 0.1s; }
-        .hero h1 { animation-delay: 0.2s; }
-        .hero p { animation-delay: 0.3s; }
-        .cta-buttons { animation-delay: 0.4s; }
-        .install-cmd { animation-delay: 0.5s; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mendix Widget Generator - Zero to Widget in 60 Seconds</title>
+  <meta name="description"
+    content="The fastest way to create Mendix pluggable widgets. Interactive wizard, 10+ templates, cross-platform CLI.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0595db;
+      --primary-dark: #0477b2;
+      --secondary: #264ae5;
+      --accent: #10b981;
+      --bg: #0a0a0a;
+      --bg-card: #18181b;
+      --text: #fafafa;
+      --text-muted: #a1a1aa;
+      --border: #27272a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      padding: 4rem 2rem;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1000px;
+      height: 1000px;
+      background: radial-gradient(circle, rgba(5, 149, 219, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(3rem, 8vw, 5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin-bottom: 2.5rem;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px rgba(5, 149, 219, 0.4);
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+    }
+
+    /* Install Command */
+    .install-cmd {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 3rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .install-cmd code {
+      color: var(--accent);
+    }
+
+    .install-cmd button {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.5rem;
+      transition: color 0.2s;
+    }
+
+    .install-cmd button:hover {
+      color: var(--primary);
+    }
+
+    /* Features Section */
+    .features {
+      padding: 6rem 0;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 1.125rem;
+      margin-bottom: 4rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: all 0.3s;
+    }
+
+    .feature-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-4px);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+    }
+
+    /* Templates Section */
+    .templates {
+      padding: 6rem 0;
+      background: linear-gradient(180deg, transparent, rgba(5, 149, 219, 0.05), transparent);
+    }
+
+    .templates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .template-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .template-card:hover {
+      border-color: var(--primary);
+      transform: scale(1.03);
+    }
+
+    .template-icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .template-card h4 {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .template-card p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    /* Code Examples */
+    .code-section {
+      padding: 6rem 0;
+    }
+
+    .code-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .code-tab {
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px 8px 0 0;
+      border-bottom: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+
+    .code-tab.active {
+      color: var(--primary);
+      background: var(--bg);
+    }
+
+    .code-block {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 0 12px 12px 12px;
+      padding: 2rem;
+      overflow-x: auto;
+    }
+
+    .code-block pre {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      line-height: 1.8;
+    }
+
+    .code-block .comment {
+      color: #6a737d;
+    }
+
+    .code-block .command {
+      color: var(--accent);
+    }
+
+    .code-block .flag {
+      color: #f97316;
+    }
+
+    /* Footer */
+    footer {
+      padding: 4rem 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    footer p {
+      color: var(--text-muted);
+    }
+
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero>* {
+      animation: fadeInUp 0.6s ease-out backwards;
+    }
+
+    .hero-badge {
+      animation-delay: 0.1s;
+    }
+
+    .hero h1 {
+      animation-delay: 0.2s;
+    }
+
+    .hero p {
+      animation-delay: 0.3s;
+    }
+
+    .cta-buttons {
+      animation-delay: 0.4s;
+    }
+
+    .install-cmd {
+      animation-delay: 0.5s;
+    }
+  </style>
 </head>
+
 <body>
-    <!-- Hero Section -->
-    <section class="hero">
-        <span class="hero-badge">🧙 v2.0.0 - World-Class Edition</span>
-        <h1>Zero to Widget<br>in <span>60 Seconds</span></h1>
-        <p>The fastest way to create Mendix pluggable widgets. Interactive wizard, 10+ templates, works everywhere.</p>
-        
-        <div class="cta-buttons">
-            <a href="https://github.com/jordnlvr/mendix-widget-generator" class="btn btn-primary">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-                View on GitHub
-            </a>
-            <a href="#getting-started" class="btn btn-secondary">
-                Get Started →
-            </a>
+  <!-- Hero Section -->
+  <section class="hero">
+    <span class="hero-badge">🧙 v2.0.0 - World-Class Edition</span>
+    <h1>Zero to Widget<br>in <span>60 Seconds</span></h1>
+    <p>The fastest way to create Mendix pluggable widgets. Interactive wizard, 10+ templates, works everywhere.</p>
+
+    <div class="cta-buttons">
+      <a href="https://github.com/jordnlvr/mendix-widget-generator" class="btn btn-primary">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+        </svg>
+        View on GitHub
+      </a>
+      <a href="configurator.html" class="btn btn-secondary">
+        🖥️ Web Configurator
+      </a>
+      <a href="#getting-started" class="btn btn-secondary">
+        Get Started →
+      </a>
+    </div>
+
+    <div class="install-cmd">
+      <code>npx create-mendix-widget</code>
+      <button onclick="copyCommand()" title="Copy to clipboard">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+        </svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features container" id="features">
+    <h2 class="section-title">Why Developers Love It</h2>
+    <p class="section-subtitle">Everything you need to build widgets fast</p>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>60-Second Setup</h3>
+        <p>Answer a few questions, and your widget is built, compiled, and ready to use. No manual configuration.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <h3>Cross-Platform</h3>
+        <p>Works on Windows, macOS, and Linux. Use npm/npx anywhere - no PowerShell required.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📦</div>
+        <h3>10+ Templates</h3>
+        <p>Start with StatusBadge, DataCard, TextInput, Rating, and more. Customize or use as-is.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🖥️</div>
+        <h3>Visual Web UI</h3>
+        <p>Don't like CLIs? Use our beautiful web configurator to design your widget visually.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>All Property Types</h3>
+        <p>String, boolean, enum, expression, attribute, datasource, widgets container, and more.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">✅</div>
+        <h3>Battle-Tested</h3>
+        <p>5/5 widget types pass our test suite. Generated widgets work the first time, every time.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Templates Section -->
+  <section class="templates" id="templates">
+    <div class="container">
+      <h2 class="section-title">Built-in Templates</h2>
+      <p class="section-subtitle">Pick a template and customize it in seconds</p>
+
+      <div class="templates-grid">
+        <div class="template-card">
+          <div class="template-icon">🏷️</div>
+          <h4>status-badge</h4>
+          <p>Colored status indicator</p>
         </div>
-        
-        <div class="install-cmd">
-            <code>npx create-mendix-widget</code>
-            <button onclick="copyCommand()" title="Copy to clipboard">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-            </button>
+        <div class="template-card">
+          <div class="template-icon">📋</div>
+          <h4>data-card</h4>
+          <p>Repeating card layout</p>
         </div>
-    </section>
-    
-    <!-- Features Section -->
-    <section class="features container" id="features">
-        <h2 class="section-title">Why Developers Love It</h2>
-        <p class="section-subtitle">Everything you need to build widgets fast</p>
-        
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">⚡</div>
-                <h3>60-Second Setup</h3>
-                <p>Answer a few questions, and your widget is built, compiled, and ready to use. No manual configuration.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🌐</div>
-                <h3>Cross-Platform</h3>
-                <p>Works on Windows, macOS, and Linux. Use npm/npx anywhere - no PowerShell required.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📦</div>
-                <h3>10+ Templates</h3>
-                <p>Start with StatusBadge, DataCard, TextInput, Rating, and more. Customize or use as-is.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🖥️</div>
-                <h3>Visual Web UI</h3>
-                <p>Don't like CLIs? Use our beautiful web configurator to design your widget visually.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🎯</div>
-                <h3>All Property Types</h3>
-                <p>String, boolean, enum, expression, attribute, datasource, widgets container, and more.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">✅</div>
-                <h3>Battle-Tested</h3>
-                <p>5/5 widget types pass our test suite. Generated widgets work the first time, every time.</p>
-            </div>
+        <div class="template-card">
+          <div class="template-icon">📝</div>
+          <h4>text-input</h4>
+          <p>Custom validated input</p>
         </div>
-    </section>
-    
-    <!-- Templates Section -->
-    <section class="templates" id="templates">
-        <div class="container">
-            <h2 class="section-title">Built-in Templates</h2>
-            <p class="section-subtitle">Pick a template and customize it in seconds</p>
-            
-            <div class="templates-grid">
-                <div class="template-card">
-                    <div class="template-icon">🏷️</div>
-                    <h4>status-badge</h4>
-                    <p>Colored status indicator</p>
-                </div>
-                <div class="template-card">
-                    <div class="template-icon">📋</div>
-                    <h4>data-card</h4>
-                    <p>Repeating card layout</p>
-                </div>
-                <div class="template-card">
-                    <div class="template-icon">📝</div>
-                    <h4>text-input</h4>
-                    <p>Custom validated input</p>
-                </div>
-                <div class="template-card">
-                    <div class="template-icon">📊</div>
-                    <h4>progress-bar</h4>
-                    <p>Visual progress indicator</p>
-                </div>
-                <div class="template-card">
-                    <div class="template-icon">🔘</div>
-                    <h4>icon-button</h4>
-                    <p>Button with icon</p>
-                </div>
-                <div class="template-card">
-                    <div class="template-icon">📑</div>
-                    <h4>tabs</h4>
-                    <p>Tabbed container</p>
-                </div>
-                <div class="template-card">
-                    <div class="template-icon">🪟</div>
-                    <h4>modal-trigger</h4>
-                    <p>Modal popup trigger</p>
-                </div>
-                <div class="template-card">
-                    <div class="template-icon">📤</div>
-                    <h4>file-upload</h4>
-                    <p>Drag & drop uploader</p>
-                </div>
-                <div class="template-card">
-                    <div class="template-icon">⏱️</div>
-                    <h4>countdown</h4>
-                    <p>Countdown timer</p>
-                </div>
-                <div class="template-card">
-                    <div class="template-icon">⭐</div>
-                    <h4>rating</h4>
-                    <p>Star rating component</p>
-                </div>
-            </div>
+        <div class="template-card">
+          <div class="template-icon">📊</div>
+          <h4>progress-bar</h4>
+          <p>Visual progress indicator</p>
         </div>
-    </section>
-    
-    <!-- Getting Started -->
-    <section class="code-section container" id="getting-started">
-        <h2 class="section-title">Getting Started</h2>
-        <p class="section-subtitle">Three ways to create your widget</p>
-        
-        <div class="code-tabs">
-            <button class="code-tab active">npx (Recommended)</button>
-            <button class="code-tab">Template</button>
-            <button class="code-tab">Config File</button>
+        <div class="template-card">
+          <div class="template-icon">🔘</div>
+          <h4>icon-button</h4>
+          <p>Button with icon</p>
         </div>
-        
-        <div class="code-block">
-            <pre><span class="comment"># Interactive wizard - answer questions to generate your widget</span>
+        <div class="template-card">
+          <div class="template-icon">📑</div>
+          <h4>tabs</h4>
+          <p>Tabbed container</p>
+        </div>
+        <div class="template-card">
+          <div class="template-icon">🪟</div>
+          <h4>modal-trigger</h4>
+          <p>Modal popup trigger</p>
+        </div>
+        <div class="template-card">
+          <div class="template-icon">📤</div>
+          <h4>file-upload</h4>
+          <p>Drag & drop uploader</p>
+        </div>
+        <div class="template-card">
+          <div class="template-icon">⏱️</div>
+          <h4>countdown</h4>
+          <p>Countdown timer</p>
+        </div>
+        <div class="template-card">
+          <div class="template-icon">⭐</div>
+          <h4>rating</h4>
+          <p>Star rating component</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Getting Started -->
+  <section class="code-section container" id="getting-started">
+    <h2 class="section-title">Getting Started</h2>
+    <p class="section-subtitle">Three ways to create your widget</p>
+
+    <div class="code-tabs">
+      <button class="code-tab active">npx (Recommended)</button>
+      <button class="code-tab">Template</button>
+      <button class="code-tab">Config File</button>
+    </div>
+
+    <div class="code-block">
+      <pre><span class="comment"># Interactive wizard - answer questions to generate your widget</span>
 <span class="command">npx</span> create-mendix-widget
 
 <span class="comment"># Use a pre-built template</span>
@@ -503,30 +540,31 @@
 
 <span class="comment"># Generate from a JSON config file</span>
 <span class="command">npx</span> create-mendix-widget <span class="flag">--config</span> my-widget.json</pre>
-        </div>
-    </section>
-    
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <p>
-                Built with 🧙 by <a href="https://github.com/jordnlvr">jordnlvr</a>
-                · <a href="https://github.com/jordnlvr/mendix-widget-generator">GitHub</a>
-                · <a href="https://github.com/jordnlvr/mendix-widget-generator/issues">Report Issue</a>
-            </p>
-        </div>
-    </footer>
-    
-    <script>
-        function copyCommand() {
-            navigator.clipboard.writeText('npx create-mendix-widget');
-            // Show feedback
-            const btn = document.querySelector('.install-cmd button');
-            btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
-            setTimeout(() => {
-                btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
-            }, 2000);
-        }
-    </script>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>
+        Built with 🧙 by <a href="https://github.com/jordnlvr">jordnlvr</a>
+        · <a href="https://github.com/jordnlvr/mendix-widget-generator">GitHub</a>
+        · <a href="https://github.com/jordnlvr/mendix-widget-generator/issues">Report Issue</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    function copyCommand() {
+      navigator.clipboard.writeText('npx create-mendix-widget');
+      // Show feedback
+      const btn = document.querySelector('.install-cmd button');
+      btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+      setTimeout(() => {
+        btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+      }, 2000);
+    }
+  </script>
 </body>
+
 </html>
